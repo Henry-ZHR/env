@@ -20,14 +20,17 @@ exec bwrap --unshare-all \
            --dev-bind /dev/nvidiactl /dev/nvidiactl \
            --ro-bind /proc/driver/nvidia /proc/driver/nvidia \
            --ro-bind /run/dbus /run/dbus \
-           --ro-bind /run/user/$UID/bus /run/user/$UID/bus \
-           --ro-bind /run/user/$UID/pulse /run/user/$UID/pulse \
-           --ro-bind /sys/dev/char /sys/dev/char \
+           --ro-bind /run/user/$(id -u)/bus /run/user/$(id -u)/bus \
+           --ro-bind /run/user/$(id -u)/pulse /run/user/$(id -u)/pulse \
+           --ro-bind /sys/block /sys/block \
+           --ro-bind /sys/bus /sys/bus \
+           --ro-bind /sys/class /sys/class \
+           --ro-bind /sys/dev /sys/dev \
            --ro-bind /sys/devices /sys/devices \
+           --ro-bind /tmp/.X11-unix /tmp/.X11-unix \
            --bind $1 ~ \
            --bind ~/.cache/fontconfig ~/.cache/fontconfig \
            --ro-bind ~/.config/fontconfig ~/.config/fontconfig \
            --ro-bind ~/.Xauthority ~/.Xauthority \
-           --ro-bind /tmp/.X11-unix /tmp/.X11-unix \
            --chdir ~ \
            "${@:2}"
