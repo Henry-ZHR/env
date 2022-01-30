@@ -16,9 +16,9 @@ exec bwrap --unshare-all \
            --tmpfs /sys \
            --tmpfs /tmp \
            --dev-bind /dev/dri /dev/dri \
-           --dev-bind /dev/nvidia0 /dev/nvidia0 \
-           --dev-bind /dev/nvidiactl /dev/nvidiactl \
-           --ro-bind /proc/driver/nvidia /proc/driver/nvidia \
+           --dev-bind-try /dev/nvidia0 /dev/nvidia0 \
+           --dev-bind-try /dev/nvidiactl /dev/nvidiactl \
+           --ro-bind-try /proc/driver/nvidia /proc/driver/nvidia \
            --ro-bind /run/dbus /run/dbus \
            --ro-bind /run/user/$(id -u)/bus /run/user/$(id -u)/bus \
            --ro-bind /run/user/$(id -u)/pulse /run/user/$(id -u)/pulse \
