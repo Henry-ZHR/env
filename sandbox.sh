@@ -30,9 +30,7 @@ exec bwrap --unshare-all \
            --ro-bind /tmp/.X11-unix /tmp/.X11-unix \
            --bind $1 ~ \
            --bind ~/.cache/fontconfig ~/.cache/fontconfig \
-           --bind ~/.cache/ibus ~/.cache/ibus \
            --ro-bind ~/.config/fontconfig ~/.config/fontconfig \
-           --ro-bind ~/.config/ibus ~/.config/ibus \
            --ro-bind ~/.Xauthority ~/.Xauthority \
            --chdir ~ \
            "${@:2}"
