@@ -18,6 +18,7 @@ exec bwrap --unshare-all \
            --dev-bind /dev/dri /dev/dri \
            --dev-bind-try /dev/nvidia0 /dev/nvidia0 \
            --dev-bind-try /dev/nvidiactl /dev/nvidiactl \
+           --dev-bind-try /dev/nvidia-modeset /dev/nvidia-modeset \
            --ro-bind-try /proc/driver/nvidia /proc/driver/nvidia \
            --ro-bind /run/dbus /run/dbus \
            --ro-bind /run/user/$(id -u)/bus /run/user/$(id -u)/bus \
