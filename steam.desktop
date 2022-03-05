@@ -1,0 +1,8 @@
+[Desktop Entry]
+Categories=Game;
+Exec=~/.local/bin/steam -tcp %U
+Icon=steam
+Name=Steam (Sandboxed)
+StartupNotify=true
+Terminal=true
+Type=Application
