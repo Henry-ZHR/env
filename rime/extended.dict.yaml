@@ -6,3 +6,4 @@ use_preset_vocabulary: true
 import_tables:
   - luna_pinyin
   - moegirl
+  - zhwiki
