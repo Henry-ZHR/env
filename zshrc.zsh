@@ -10,7 +10,7 @@ alias update-sub="sudo -u clash /home/clash/update-sub.py && sudo systemctl rest
 alias baidunetdisk="sandbox ~/Documents/Sandbox/BaiduNetdisk --bind ~/Downloads/BaiduNetdisk/ ~/Downloads -- /usr/bin/baidunetdisk"
 alias malody="sandbox ~/Documents/Sandbox/Malody -- /usr/bin/wine ~/Malody-4.3.7/malody.exe"
 alias wemeet="sandbox ~/Documents/Sandbox/WeMeet -- sh -c '/opt/apps/com.tencent.meeting.deepin/files/run.sh && sleep infinity'"
-alias xes="sandbox ~/Documents/Sandbox/XES --tmpfs ~/.wine/drive_c/users/zhr/AppData/Local/owcrclient/wcropenclassroom/dump/ -- wine 'C:\Program Files (x86)\xeszx\3.20.0.1655\owcrclient.exe'"
+alias xes="sandbox ~/Documents/Sandbox/XES --tmpfs ~/.wine/drive_c/users/zhr/AppData/Local/owcrclient/wcropenclassroom/dump/ -- wine 'C:\Program Files (x86)\xeszx\3.21.0.1680\owcrclient.exe'"
 
 disable kill
 disable printf
