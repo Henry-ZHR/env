@@ -1,0 +1,2 @@
+clash-service.hook -> /etc/pacman.d/hooks/clash-service.hook
+clash-service.patch -> /usr/local/share/clash-service.patch
