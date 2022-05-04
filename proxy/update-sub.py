@@ -9,7 +9,7 @@ from yaml import safe_dump
 SUB_URL_FILE = '/home/clash/sub-url.txt'
 CLASH_CONFIG_FILE = '/home/clash/.config/clash/config.yaml'
 
-YACD_PATH = '/home/clash/yacd'
+EXTERNAL_UI_PATH = '/home/clash/clash-dashboard/dist'
 API_SECRET = open('/home/clash/api-secret.txt').read()
 
 RESERVED_V4_IPS = [
@@ -44,7 +44,7 @@ sub = {
     'log-level': 'debug',
     'ipv6': True,
     'external-controller': '127.0.0.1:9090',
-    'external-ui': YACD_PATH,
+    'external-ui': EXTERNAL_UI_PATH,
     'secret': API_SECRET,
     'profile': {
         'store-selected': True,
