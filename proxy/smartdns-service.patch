@@ -1,0 +1,10 @@
+--- old.service	1970-01-01 00:00:00.000000000 +0000
++++ new.service	1970-01-01 00:00:00.000000000 +0000
+@@ -6,6 +6,7 @@
+ 
+ [Service]
+ Type=forking
++Group=smartdns
+ PIDFile=/run/smartdns.pid
+ EnvironmentFile=/etc/default/smartdns
+ ExecStart=/usr/bin/smartdns -p /run/smartdns.pid $SMART_DNS_OPTS 

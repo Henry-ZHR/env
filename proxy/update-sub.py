@@ -25,6 +25,10 @@ CN_DOMAINS = [
     'richup.io'
 ]
 NON_CN_DOMAINS = ['www.google.com', 'www.google.com.hk']
+DNS_SERVER_IPS = [
+    '223.5.5.5/32', '1.12.12.12/32', '101.6.6.6/32', '9.9.9.9/32',
+    '45.11.45.11/32'
+]
 
 
 def fill(s: str) -> str:
@@ -52,7 +56,8 @@ sub = {
     },
     'proxies': []
 }
-sub['rules'] = ['DOMAIN-SUFFIX,%s,国外' % domain for domain in NON_CN_DOMAINS]+ \
+sub['rules'] = ['IP-CIDR,%s,DIRECT'% ip for ip in DNS_SERVER_IPS] + \
+               ['DOMAIN-SUFFIX,%s,国外' % domain for domain in NON_CN_DOMAINS] + \
                ['DOMAIN-SUFFIX,%s,国内' % domain for domain in CN_DOMAINS] + \
                ['IP-CIDR,%s,本地' % ip for ip in RESERVED_V4_IPS] + \
                ['IP-CIDR6,%s,本地' % ip for ip in RESERVED_V6_IPS] + \
