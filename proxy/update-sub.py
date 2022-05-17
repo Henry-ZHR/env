@@ -56,7 +56,7 @@ sub = {
     },
     'proxies': []
 }
-sub['rules'] = ['IP-CIDR,%s,DIRECT'% ip for ip in DNS_SERVER_IPS] + \
+sub['rules'] = ['IP-CIDR,%s,国内域名解析,no-resolve' % ip for ip in DNS_SERVER_IPS] + \
                ['DOMAIN-SUFFIX,%s,国外' % domain for domain in NON_CN_DOMAINS] + \
                ['DOMAIN-SUFFIX,%s,国内' % domain for domain in CN_DOMAINS] + \
                ['IP-CIDR,%s,本地' % ip for ip in RESERVED_V4_IPS] + \
@@ -91,6 +91,10 @@ sub['proxy-groups'] = [{
     'name': '本地',
     'type': 'select',
     'proxies': ['DIRECT'] + proxy_names
+}, {
+    'name': '国内域名解析',
+    'type': 'select',
+    'proxies': ['DIRECT']
 }]
 
 with open(CLASH_CONFIG_FILE, 'w') as config_file:
