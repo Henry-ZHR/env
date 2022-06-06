@@ -42,7 +42,6 @@ def get_raw_sub() -> bytes:
 sub = {
     'port': 7890,
     'socks-port': 7891,
-    'tproxy-port': 7893,
     'allow-lan': False,
     'mode': 'rule',
     'log-level': 'debug',
