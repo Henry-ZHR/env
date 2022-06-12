@@ -3,7 +3,7 @@
 from base64 import decodebytes
 from requests import get
 from sys import stderr
-from urllib.parse import unquote
+from urllib.parse import parse_qs, unquote, urlparse
 from yaml import safe_dump
 
 SUB_URL_FILE = '/home/clash/sub-url.txt'
@@ -65,18 +65,36 @@ sub['rules'] = ['IP-CIDR,%s,国内域名解析,no-resolve' % ip for ip in DNS_SE
 proxy_names = []
 
 for s in decodebytes(get_raw_sub()).decode().split():
-    if s.startswith('vmess://'):
-        print('Ignoring vmess server', file=stderr)
+    if s.startswith('ss://'):
+        proxy = {'type': 'ss', 'udp': True}
+        proxy['cipher'], proxy['password'] = decodebytes(
+            fill(s[5:s.find('@')]).encode()).decode().split(':')
+        proxy['server'] = s[s.find('@') + 1:s.find(':', 5)]
+        proxy['port'] = s[s.find(':', 5) + 1:s.find('#')]
+        proxy['name'] = unquote(s[s.find('#') + 1:])
+        sub['proxies'].append(proxy)
+        proxy_names.append(proxy['name'])
         continue
-    assert s[:5] == 'ss://'
-    proxy = {'type': 'ss', 'udp': True}
-    proxy['cipher'], proxy['password'] = decodebytes(
-        fill(s[5:s.find('@')]).encode()).decode().split(':')
-    proxy['server'] = s[s.find('@') + 1:s.find(':', 5)]
-    proxy['port'] = s[s.find(':', 5) + 1:s.find('#')]
-    proxy['name'] = unquote(s[s.find('#') + 1:])
-    sub['proxies'].append(proxy)
-    proxy_names.append(proxy['name'])
+    if s.startswith('trojan://'):
+        r = urlparse(s)
+        t = parse_qs(r.query)
+        assert r.scheme == 'trojan'
+        if 'sni' not in t:
+            print('SNI not present, ignored', file=stderr)
+            continue
+        sub['proxies'].append({
+            'name': unquote(r.fragment),
+            'type': 'trojan',
+            'server': r.hostname,
+            'port': r.port,
+            'password': r.username,
+            'udp': True,
+            'sni': t['sni'][0],
+            'skip-cert-verify': False
+        })
+        proxy_names.append(unquote(r.fragment))
+        continue
+    print('Ignore unknown server', file=stderr)
 
 sub['proxy-groups'] = [{
     'name': '国外',
