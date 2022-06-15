@@ -24,11 +24,12 @@ CN_DOMAINS = [
     'baidu.com', 'gov.cn', 'bilibili.com', 'hdslb.com', 'kugou.com',
     'richup.io'
 ]
-NON_CN_DOMAINS = ['www.google.com', 'www.google.com.hk']
-DNS_SERVER_IPS = [
+NON_CN_DOMAINS = []
+CN_DNS_SERVER_IPS = [
     '223.5.5.5/32', '1.12.12.12/32', '101.6.6.6/32', '9.9.9.9/32',
     '45.11.45.11/32'
 ]
+NON_CN_DNS_SERVER_IPS = ['8.8.8.8/32', '1.1.1.1/32']
 
 
 def fill(s: str) -> str:
@@ -50,12 +51,12 @@ sub = {
     'external-ui': EXTERNAL_UI_PATH,
     'secret': API_SECRET,
     'profile': {
-        'store-selected': True,
-        'store-fake-ip': False
+        'store-selected': True
     },
     'proxies': []
 }
-sub['rules'] = ['IP-CIDR,%s,国内域名解析,no-resolve' % ip for ip in DNS_SERVER_IPS] + \
+sub['rules'] = ['IP-CIDR,%s,国内域名解析,no-resolve' % ip for ip in CN_DNS_SERVER_IPS] + \
+               ['IP-CIDR,%s,国外域名解析,no-resolve' % ip for ip in NON_CN_DNS_SERVER_IPS] + \
                ['DOMAIN-SUFFIX,%s,国外' % domain for domain in NON_CN_DOMAINS] + \
                ['DOMAIN-SUFFIX,%s,国内' % domain for domain in CN_DOMAINS] + \
                ['IP-CIDR,%s,本地' % ip for ip in RESERVED_V4_IPS] + \
@@ -97,21 +98,29 @@ for s in decodebytes(get_raw_sub()).decode().split():
     print('Ignore unknown server', file=stderr)
 
 sub['proxy-groups'] = [{
+    'name': '代理',
+    'type': 'select',
+    'proxies': proxy_names
+}, {
     'name': '国外',
     'type': 'select',
-    'proxies': proxy_names + ['DIRECT']
+    'proxies': ['代理', 'DIRECT']
 }, {
     'name': '国内',
     'type': 'select',
-    'proxies': ['DIRECT'] + proxy_names
+    'proxies': ['DIRECT', '代理']
 }, {
-    'name': '本地',
+    'name': '国外域名解析',
     'type': 'select',
-    'proxies': ['DIRECT'] + proxy_names
+    'proxies': ['代理', 'DIRECT']
 }, {
     'name': '国内域名解析',
     'type': 'select',
-    'proxies': ['DIRECT']
+    'proxies': ['DIRECT', '代理']
+}, {
+    'name': '本地',
+    'type': 'select',
+    'proxies': ['DIRECT', '代理']
 }]
 
 with open(CLASH_CONFIG_FILE, 'w') as config_file:
