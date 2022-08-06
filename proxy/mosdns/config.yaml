@@ -1,0 +1,95 @@
+log:
+  level: debug
+
+data_providers:
+  - tag: geoip
+    file: /usr/share/v2ray/geoip.dat
+    auto_reload: true
+  - tag: geosite
+    file: /usr/share/v2ray/geosite.dat
+    auto_reload: true
+  - tag: proxy_server_domains
+    file: proxy-server-domains.txt
+    auto_reload: true
+  - tag: apple_china_domains
+    file: apple-china-domains.txt
+  - tag: google_china_domains
+    file: google-china-domains.txt
+
+plugins:
+  - tag: local_domain_matcher
+    type: query_matcher
+    args:
+      domain:
+        - provider:geosite:cn
+        - provider:proxy_server_domains
+        - provider:apple_china_domains
+        - provider:google_china_domains
+  - tag: local_ip_matcher
+    type: response_matcher
+    args:
+      ip:
+        - provider:geoip:cn
+  - tag: cache
+    type: cache
+    args:
+      size: 1024
+      lazy_cache_ttl: 86400
+      lazy_cache_reply_ttl: 30
+      cache_everything: true
+  - tag: forward_local
+    type: fast_forward
+    args:
+      upstream:
+        - addr: https://223.5.5.5/dns-query
+          trusted: true
+        - addr: https://1.12.12.12/dns-query
+          trusted: true
+  - tag: forward_remote
+    type: fast_forward
+    args:
+      upstream:
+        - addr: https://8.8.8.8/dns-query
+          socks5: 127.0.0.1:7891
+          trusted: true
+        - addr: https://1.1.1.1/dns-query
+          socks5: 127.0.0.1:7891
+          trusted: true
+  - tag: forward_remote_with_fallback
+    type: sequence
+    args:
+      exec:
+        - forward_remote
+        - if: local_ip_matcher
+          exec:
+            - forward_local
+  - tag: forward_default
+    type: sequence
+    args:
+      exec:
+        - cache
+        - if: local_domain_matcher
+          exec:
+            - forward_local
+            - _return
+        - primary:
+            - forward_remote_with_fallback
+          secondary:
+            - forward_local
+          fast_fallback: 3000
+          always_standby: false
+
+servers:
+  - exec: forward_default
+    listeners:
+      - addr: 127.0.0.1:53
+        protocol: udp
+      - addr: 127.0.0.1:53
+        protocol: tcp
+      - addr: "[::1]:53"
+        protocol: udp
+      - addr: "[::1]:53"
+        protocol: tcp
+
+api:
+  http: 127.0.0.1:9080
