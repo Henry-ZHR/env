@@ -13,8 +13,10 @@ data_providers:
     auto_reload: true
   - tag: apple_china_domains
     file: apple-china-domains.txt
+    auto_reload: true
   - tag: google_china_domains
     file: google-china-domains.txt
+    auto_reload: true
 
 plugins:
   - tag: local_domain_matcher
