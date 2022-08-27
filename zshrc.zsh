@@ -3,8 +3,6 @@ if [ ! -n "$ZSH_VERSION" ]; then
   return
 fi
 
-alias update-p10k="git -C ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k pull"
-
 alias update-sub="sudo -u clash /home/clash/update-sub.py && sudo systemctl restart clash@clash"
 
 # alias baidunetdisk="sandbox ~/Documents/Sandbox/BaiduNetdisk --bind ~/Downloads/BaiduNetdisk/ ~/Downloads -- /usr/bin/baidunetdisk"
