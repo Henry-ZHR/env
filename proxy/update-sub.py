@@ -1,22 +1,28 @@
 #!/bin/python
 
 from base64 import decodebytes
-from ipaddress import _IPv4Constants, _IPv6Constants
+from ipaddress import ip_network, IPv4Network, IPv6Network, _IPv4Constants, _IPv6Constants
 from requests import get
 from sys import stderr
 from urllib.parse import parse_qs, unquote, urlparse
 from yaml import safe_dump
 
-SUB_URL_FILE = '/home/clash/sub-url.txt'
+SUB_URL = open('/home/clash/sub-url.txt', 'r').read().strip()
 CLASH_CONFIG_FILE = '/home/clash/.config/clash/config.yaml'
 
 EXTERNAL_UI_PATH = '/home/clash/clash-dashboard/dist'
-API_SECRET = open('/home/clash/api-secret.txt').read()
+API_SECRET = open('/home/clash/api-secret.txt', 'r').read()
 
 CN_DOMAINS = []
 NON_CN_DOMAINS = []
-CN_DNS_SERVER_IPS = ['223.5.5.5/32', '1.12.12.12/32']
-NON_CN_DNS_SERVER_IPS = ['8.8.8.8/32', '1.1.1.1/32']
+CN_DNS_SERVER_ADDRESSES = ['223.5.5.5', '1.12.12.12']
+NON_CN_DNS_SERVER_ADDRESSES = ['8.8.8.8', '1.1.1.1']
+TELEGRAM_ADDRESSES = [
+    '91.108.56.0/22', '91.108.4.0/22', '91.108.8.0/22', '91.108.16.0/22',
+    '91.108.12.0/22', '149.154.160.0/20', '91.105.192.0/23', '91.108.20.0/22',
+    '185.76.151.0/24', '2001:b28:f23d::/48', '2001:b28:f23f::/48',
+    '2001:67c:4e8::/48', '2001:b28:f23c::/48', '2a0a:f280::/32'
+]  # https://core.telegram.org/resources/cidr.txt
 
 
 def fill(s: str) -> str:
@@ -24,7 +30,28 @@ def fill(s: str) -> str:
 
 
 def get_raw_sub() -> bytes:
-    return get(open(SUB_URL_FILE, 'r').read().strip()).content
+    return get(SUB_URL).content
+
+
+def address_to_rule(address, target: str, no_resolve=False) -> str:
+    network = ip_network(address)
+    if isinstance(network, IPv4Network):
+        rule = f'IP-CIDR,{network},{target}'
+    elif isinstance(network, IPv6Network):
+        rule = f'IP-CIDR6,{network},{target}'
+    else:
+        raise RuntimeError(f'Unknown address {address}')
+    if no_resolve:
+        rule += ',no-resolve'
+    return rule
+
+
+def addresses_to_rules(addresses: list,
+                       target: str,
+                       no_resolve=False) -> list[str]:
+    return [
+        address_to_rule(address, target, no_resolve) for address in addresses
+    ]
 
 
 sub = {
@@ -42,15 +69,15 @@ sub = {
     },
     'proxies': []
 }
-sub['rules'] = ['IP-CIDR,%s,国内域名解析,no-resolve' % ip for ip in CN_DNS_SERVER_IPS] + \
-               ['IP-CIDR,%s,国外域名解析,no-resolve' % ip for ip in NON_CN_DNS_SERVER_IPS] + \
+sub['rules'] = addresses_to_rules(CN_DNS_SERVER_ADDRESSES, '国内域名解析', True) + \
+               addresses_to_rules(NON_CN_DNS_SERVER_ADDRESSES, '国外域名解析', True) + \
                ['DOMAIN-SUFFIX,%s,国外' % domain for domain in NON_CN_DOMAINS] + \
                ['DOMAIN-SUFFIX,%s,国内' % domain for domain in CN_DOMAINS] + \
-               [f'IP-CIDR,{ip},私有' for ip in _IPv4Constants._private_networks] + \
-               [f'IP-CIDR6,{ip},私有' for ip in _IPv6Constants._private_networks] + \
+               addresses_to_rules(_IPv4Constants._private_networks + _IPv6Constants._private_networks, '私网') + \
+               addresses_to_rules(TELEGRAM_ADDRESSES, 'Telegram') + \
                ['GEOIP,CN,国内', 'MATCH,国外']
-# Clash is trying to translate it into IPv4, and this breaks everything
-sub['rules'].remove('IP-CIDR6,::ffff:0:0/96,私有')
+# Clash trys to translate it into IPv4, and this breaks everything
+sub['rules'].remove('IP-CIDR6,::ffff:0:0/96,私网')
 
 proxy_names = []
 
@@ -89,6 +116,10 @@ sub['proxy-groups'] = [{
     'type': 'select',
     'proxies': proxy_names
 }, {
+    'name': 'Telegram',
+    'type': 'select',
+    'proxies': ['代理', 'DIRECT', 'REJECT']
+}, {
     'name': '国外',
     'type': 'select',
     'proxies': ['代理', 'DIRECT', 'REJECT']
@@ -105,7 +136,7 @@ sub['proxy-groups'] = [{
     'type': 'select',
     'proxies': ['DIRECT', '代理', 'REJECT']
 }, {
-    'name': '私有',
+    'name': '私网',
     'type': 'select',
     'proxies': ['DIRECT', '代理', 'REJECT']
 }]
