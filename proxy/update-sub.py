@@ -10,7 +10,7 @@ from yaml import safe_dump
 SUB_URL = open('/home/clash/sub-url.txt', 'r').read().strip()
 CLASH_CONFIG_FILE = '/home/clash/.config/clash/config.yaml'
 
-EXTERNAL_UI_PATH = '/home/clash/clash-dashboard/dist'
+EXTERNAL_UI_PATH = '/usr/share/clash-dashboard-git'
 API_SECRET = open('/home/clash/api-secret.txt', 'r').read()
 
 CN_DOMAINS = []
