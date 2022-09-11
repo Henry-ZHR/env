@@ -247,7 +247,7 @@ preset_keys:
     label: Space
     repeatable: true
     functional: false
-    send: Space
+    send: space
   tab:
     label: Tab
     repeatable: true
