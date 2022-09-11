@@ -1,0 +1,4 @@
+patch:
+  switches/@0/reset: null
+  translator/dictionary: extended
+  translator/enable_correction: true

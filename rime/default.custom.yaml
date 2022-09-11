@@ -15,3 +15,5 @@ patch:
       when: always
   schema_list:
     - schema: luna_pinyin_simp
+  switcher/save_options/+:
+    - ascii_mode
