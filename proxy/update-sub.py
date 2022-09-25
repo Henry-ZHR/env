@@ -7,11 +7,10 @@ from sys import stderr
 from urllib.parse import parse_qs, unquote, urlparse
 from yaml import safe_dump
 
-SUB_URL = open('/home/clash/sub-url.txt', 'r').read().strip()
-CLASH_CONFIG_FILE = '/home/clash/.config/clash/config.yaml'
-
+SUB_URL = open('/etc/clash/sub-url.txt', 'r').read().strip()
+CLASH_CONFIG_FILE = '/etc/clash/config.yaml'
 EXTERNAL_UI_PATH = '/usr/share/clash-dashboard-git'
-API_SECRET = open('/home/clash/api-secret.txt', 'r').read()
+API_SECRET = open('/etc/clash/api-secret.txt', 'r').read()
 
 CN_DOMAINS = []
 NON_CN_DOMAINS = []
