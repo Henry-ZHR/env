@@ -1,6 +1,6 @@
 #!/bin/python
 
-from base64 import decodebytes
+from base64 import b64decode
 from ipaddress import ip_network, IPv4Network, IPv6Network, _IPv4Constants, _IPv6Constants
 from requests import get
 from sys import stderr
@@ -24,8 +24,8 @@ TELEGRAM_ADDRESSES = [
 ]  # https://core.telegram.org/resources/cidr.txt
 
 
-def fill(s: str) -> str:
-    return s + '=' * (4 - len(s) % 4)
+def fill(s: bytes) -> bytes:
+    return s + b'=' * (4 - len(s) % 4)
 
 
 def get_raw_sub() -> bytes:
@@ -80,15 +80,20 @@ sub['rules'].remove('IP-CIDR6,::ffff:0:0/96,私网')
 
 proxy_names = []
 
-for s in decodebytes(get_raw_sub()).decode().split():
+for s in b64decode(get_raw_sub()).decode().split():
     r = urlparse(s)
-    if s.startswith('ss://'):
-        proxy = {'type': 'ss', 'udp': True}
-        proxy['cipher'], proxy['password'] = decodebytes(
-            fill(s[5:s.find('@')]).encode()).decode().split(':')
-        proxy['server'] = s[s.find('@') + 1:s.find(':', 5)]
-        proxy['port'] = s[s.find(':', 5) + 1:s.find('#')]
-        proxy['name'] = unquote(s[s.find('#') + 1:])
+    if r.scheme == 'ss':
+        cipher, password = b64decode(fill(
+            r.username.encode())).decode().split(':')
+        proxy = {
+            'name': unquote(r.fragment),
+            'type': 'ss',
+            'server': r.hostname,
+            'port': r.port,
+            'cipher': cipher,
+            'password': password,
+            'udp': True
+        }
         sub['proxies'].append(proxy)
         proxy_names.append(proxy['name'])
         continue
@@ -108,7 +113,7 @@ for s in decodebytes(get_raw_sub()).decode().split():
         sub['proxies'].append(proxy)
         proxy_names.append(proxy['name'])
         continue
-    print('Ignore unknown server', file=stderr)
+    print(f'Ignore unknown server (scheme={r.scheme})', file=stderr)
 
 sub['proxy-groups'] = [{
     'name': '代理',
