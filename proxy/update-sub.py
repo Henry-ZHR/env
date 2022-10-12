@@ -5,11 +5,11 @@ from ipaddress import ip_network, IPv4Network, IPv6Network, _IPv4Constants, _IPv
 from requests import get
 from sys import stderr
 from urllib.parse import parse_qs, unquote, urlparse
-from yaml import safe_dump
+from yaml import safe_dump, safe_load
 
-SUB_URL = open('/etc/clash/sub-url.txt', 'r').read().strip()
+SUBSCRIPTIONS = safe_load(open('/etc/clash/subscriptions.yaml', 'r'))
 CLASH_CONFIG_FILE = '/etc/clash/config.yaml'
-EXTERNAL_UI_PATH = '/usr/share/clash-dashboard-git'
+EXTERNAL_UI_PATH = '/usr/share/yacd'
 API_SECRET = open('/etc/clash/api-secret.txt', 'r').read()
 
 CN_DOMAINS = []
@@ -26,10 +26,6 @@ TELEGRAM_ADDRESSES = [
 
 def fill(s: bytes) -> bytes:
     return s + b'=' * (4 - len(s) % 4)
-
-
-def get_raw_sub() -> bytes:
-    return get(SUB_URL).content
 
 
 def address_to_rule(address, target: str, no_resolve=False) -> str:
@@ -53,7 +49,40 @@ def addresses_to_rules(addresses: list,
     ]
 
 
-sub = {
+def parse_proxy(s: str, **kwargs) -> dict:
+    has_udp = kwargs.get('has_udp', True)
+    r = urlparse(s)
+    if r.scheme == 'ss':
+        cipher, password = b64decode(fill(
+            r.username.encode())).decode().split(':')
+        proxy = {
+            'name': unquote(r.fragment),
+            'type': 'ss',
+            'server': r.hostname,
+            'port': r.port,
+            'cipher': cipher,
+            'password': password,
+            'udp': has_udp
+        }
+        return proxy
+    if r.scheme == 'trojan':
+        proxy = {
+            'name': unquote(r.fragment),
+            'type': 'trojan',
+            'server': r.hostname,
+            'port': r.port,
+            'password': r.username,
+            'udp': has_udp,
+            'skip-cert-verify': False
+        }
+        q = parse_qs(r.query)
+        if 'sni' in q:
+            proxy['sni'] = q['sni'][0]
+        return proxy
+    return {}
+
+
+cfg = {
     'port': 7890,
     'socks-port': 7891,
     'allow-lan': False,
@@ -66,9 +95,14 @@ sub = {
     'profile': {
         'store-selected': True
     },
-    'proxies': []
+    'proxies': [],
+    'proxy-groups': [{
+        'name': '代理',
+        'type': 'select',
+        'proxies': []
+    }]
 }
-sub['rules'] = addresses_to_rules(CN_DNS_SERVER_ADDRESSES, '国内域名解析', True) + \
+cfg['rules'] = addresses_to_rules(CN_DNS_SERVER_ADDRESSES, '国内域名解析', True) + \
                addresses_to_rules(NON_CN_DNS_SERVER_ADDRESSES, '国外域名解析', True) + \
                ['DOMAIN-SUFFIX,%s,国外' % domain for domain in NON_CN_DOMAINS] + \
                ['DOMAIN-SUFFIX,%s,国内' % domain for domain in CN_DOMAINS] + \
@@ -76,50 +110,22 @@ sub['rules'] = addresses_to_rules(CN_DNS_SERVER_ADDRESSES, '国内域名解析',
                addresses_to_rules(TELEGRAM_ADDRESSES, 'Telegram') + \
                ['GEOIP,CN,国内', 'MATCH,国外']
 # Clash trys to translate it into IPv4, and this breaks everything
-sub['rules'].remove('IP-CIDR6,::ffff:0:0/96,私网')
+cfg['rules'].remove('IP-CIDR6,::ffff:0:0/96,私网')
 
-proxy_names = []
+for sub in SUBSCRIPTIONS:
+    cfg['proxy-groups'][0]['proxies'].append(sub['name'])
+    group = {'name': sub['name'], 'type': 'select', 'proxies': []}
+    for s in b64decode(get(sub['url']).content).decode().split():
+        proxy = parse_proxy(s, has_udp=sub['has_udp'])
+        if not proxy:
+            print(f'Ignore unknown proxy: {s}', file=stderr)
+            continue
+        proxy['name'] = sub['proxy_name_prefix'] + proxy['name']
+        cfg['proxies'].append(proxy)
+        group['proxies'].append(proxy['name'])
+    cfg['proxy-groups'].append(group)
 
-for s in b64decode(get_raw_sub()).decode().split():
-    r = urlparse(s)
-    if r.scheme == 'ss':
-        cipher, password = b64decode(fill(
-            r.username.encode())).decode().split(':')
-        proxy = {
-            'name': unquote(r.fragment),
-            'type': 'ss',
-            'server': r.hostname,
-            'port': r.port,
-            'cipher': cipher,
-            'password': password,
-            'udp': True
-        }
-        sub['proxies'].append(proxy)
-        proxy_names.append(proxy['name'])
-        continue
-    if r.scheme == 'trojan':
-        proxy = {
-            'name': unquote(r.fragment),
-            'type': 'trojan',
-            'server': r.hostname,
-            'port': r.port,
-            'password': r.username,
-            'udp': True,
-            'skip-cert-verify': False
-        }
-        t = parse_qs(r.query)
-        if 'sni' in t:
-            proxy['sni'] = t['sni'][0]
-        sub['proxies'].append(proxy)
-        proxy_names.append(proxy['name'])
-        continue
-    print(f'Ignore unknown server (scheme={r.scheme})', file=stderr)
-
-sub['proxy-groups'] = [{
-    'name': '代理',
-    'type': 'select',
-    'proxies': proxy_names
-}, {
+cfg['proxy-groups'] += [{
     'name': 'Telegram',
     'type': 'select',
     'proxies': ['代理', 'DIRECT', 'REJECT']
@@ -146,4 +152,4 @@ sub['proxy-groups'] = [{
 }]
 
 with open(CLASH_CONFIG_FILE, 'w') as config_file:
-    safe_dump(sub, config_file, allow_unicode=True)
+    safe_dump(cfg, config_file, allow_unicode=True)
