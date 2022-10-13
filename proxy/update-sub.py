@@ -51,6 +51,8 @@ def addresses_to_rules(addresses: list,
 
 def parse_proxy(s: str, **kwargs) -> dict:
     has_udp = kwargs.get('has_udp', True)
+    skip_cert_verify = kwargs.get('skip_cert_verify', False)
+
     r = urlparse(s)
     if r.scheme == 'ss':
         cipher, password = b64decode(fill(
@@ -73,7 +75,7 @@ def parse_proxy(s: str, **kwargs) -> dict:
             'port': r.port,
             'password': r.username,
             'udp': has_udp,
-            'skip-cert-verify': False
+            'skip-cert-verify': skip_cert_verify
         }
         q = parse_qs(r.query)
         if 'sni' in q:
@@ -116,7 +118,7 @@ for sub in SUBSCRIPTIONS:
     cfg['proxy-groups'][0]['proxies'].append(sub['name'])
     group = {'name': sub['name'], 'type': 'select', 'proxies': []}
     for s in b64decode(get(sub['url']).content).decode().split():
-        proxy = parse_proxy(s, has_udp=sub['has_udp'])
+        proxy = parse_proxy(s, **sub)
         if not proxy:
             print(f'Ignore unknown proxy: {s}', file=stderr)
             continue
