@@ -2,6 +2,7 @@
 
 from base64 import b64decode
 from ipaddress import ip_network, IPv4Network, IPv6Network, _IPv4Constants, _IPv6Constants
+from json import loads
 from requests import get
 from sys import stderr
 from urllib.parse import parse_qs, unquote, urlparse
@@ -25,7 +26,7 @@ TELEGRAM_ADDRESSES = [
 
 
 def fill(s: bytes) -> bytes:
-    return s + b'=' * (4 - len(s) % 4)
+    return s + b'=' * (3 - (len(s) - 1) % 4)
 
 
 def address_to_rule(address, target: str, no_resolve=False) -> str:
@@ -55,9 +56,9 @@ def parse_proxy(s: str, **kwargs) -> dict:
 
     r = urlparse(s)
     if r.scheme == 'ss':
-        cipher, password = b64decode(fill(
-            r.username.encode())).decode().split(':')
-        proxy = {
+        cipher, password = b64decode(fill(r.username.encode()),
+                                     validate=True).decode().split(':')
+        return {
             'name': unquote(r.fragment),
             'type': 'ss',
             'server': r.hostname,
@@ -66,7 +67,6 @@ def parse_proxy(s: str, **kwargs) -> dict:
             'password': password,
             'udp': has_udp
         }
-        return proxy
     if r.scheme == 'trojan':
         proxy = {
             'name': unquote(r.fragment),
@@ -81,6 +81,35 @@ def parse_proxy(s: str, **kwargs) -> dict:
         if 'sni' in q:
             proxy['sni'] = q['sni'][0]
         return proxy
+    if r.scheme == 'vmess':
+        try:
+            content = loads(b64decode(s[8:].encode(), validate=True))
+            assert content['v'] == '2'
+            proxy = {
+                'name': content['ps'],
+                'type': 'vmess',
+                'server': content['add'],
+                'port': int(content['port']),
+                'uuid': content['id'],
+                'alterId': int(content['aid']),
+                'cipher': content['scy'],
+                'udp': has_udp,
+                'tls': content['tls'] == 'tls',
+                'skip-cert-verify': skip_cert_verify,
+                'network': 'ws'
+            }
+            if content['net'] == 'ws':
+                proxy['ws-opts'] = {
+                    'path': content['path'],
+                    'headers': {
+                        'Host': content['host']
+                    }
+                }
+            else:
+                return {}
+            return proxy
+        except:
+            return {}
     return {}
 
 
@@ -113,16 +142,22 @@ cfg['rules'] = addresses_to_rules(CN_DNS_SERVER_ADDRESSES, '国内域名解析',
                ['GEOIP,CN,国内', 'MATCH,国外']
 # Clash trys to translate it into IPv4, and this breaks everything
 cfg['rules'].remove('IP-CIDR6,::ffff:0:0/96,私网')
+all_proxy_names = set()
 
 for sub in SUBSCRIPTIONS:
     cfg['proxy-groups'][0]['proxies'].append(sub['name'])
     group = {'name': sub['name'], 'type': 'select', 'proxies': []}
-    for s in b64decode(get(sub['url']).content).decode().split():
+    for s in b64decode(get(sub['url']).content.strip(),
+                       validate=True).decode().split():
         proxy = parse_proxy(s, **sub)
         if not proxy:
-            print(f'Ignore unknown proxy: {s}', file=stderr)
+            print(f'Can\'t parse: {s}', file=stderr)
             continue
         proxy['name'] = sub['proxy_name_prefix'] + proxy['name']
+        if proxy['name'] in all_proxy_names:
+            print(f'Duplicate name detected: {proxy["name"]}', file=stderr)
+            continue
+        all_proxy_names.add(proxy['name'])
         cfg['proxies'].append(proxy)
         group['proxies'].append(proxy['name'])
     cfg['proxy-groups'].append(group)
