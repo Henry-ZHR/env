@@ -147,19 +147,28 @@ all_proxy_names = set()
 for sub in SUBSCRIPTIONS:
     cfg['proxy-groups'][0]['proxies'].append(sub['name'])
     group = {'name': sub['name'], 'type': 'select', 'proxies': []}
-    for s in b64decode(get(sub['url']).content.strip(),
-                       validate=True).decode().split():
-        proxy = parse_proxy(s, **sub)
-        if not proxy:
-            print(f'Can\'t parse: {s}', file=stderr)
-            continue
+
+    def add_proxy(proxy: dict):
         proxy['name'] = sub['proxy_name_prefix'] + proxy['name']
         if proxy['name'] in all_proxy_names:
             print(f'Duplicate name detected: {proxy["name"]}', file=stderr)
-            continue
+            return
         all_proxy_names.add(proxy['name'])
         cfg['proxies'].append(proxy)
         group['proxies'].append(proxy['name'])
+
+    sub_content = get(sub['url']).content
+    try:
+        yaml_content = safe_load(sub_content)
+    except:
+        yaml_content = None
+    if type(yaml_content) is dict and yaml_content['proxies']:
+        for proxy in yaml_content['proxies']:
+            add_proxy(proxy)
+    else:
+        for s in b64decode(sub_content.strip(),
+                           validate=True).decode().split():
+            add_proxy(parse_proxy(s, **sub))
     cfg['proxy-groups'].append(group)
 
 cfg['proxy-groups'] += [{
