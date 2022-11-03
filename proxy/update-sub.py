@@ -1,14 +1,15 @@
 #!/bin/python
 
+import json
+import requests
+import yaml
+
 from base64 import b64decode
 from ipaddress import ip_network, IPv4Network, IPv6Network, _IPv4Constants, _IPv6Constants
-from json import loads
-from requests import get
 from sys import stderr
 from urllib.parse import parse_qs, unquote, urlparse
-from yaml import safe_dump, safe_load
 
-SUBSCRIPTIONS = safe_load(open('/etc/clash/subscriptions.yaml', 'r'))
+SUBSCRIPTIONS = yaml.safe_load(open('/etc/clash/subscriptions.yaml', 'r'))
 CLASH_CONFIG_FILE = '/etc/clash/config.yaml'
 EXTERNAL_UI_PATH = '/usr/share/yacd'
 API_SECRET = open('/etc/clash/api-secret.txt', 'r').read()
@@ -82,34 +83,36 @@ def parse_proxy(s: str, **kwargs) -> dict:
             proxy['sni'] = q['sni'][0]
         return proxy
     if r.scheme == 'vmess':
-        try:
-            content = loads(b64decode(s[8:].encode(), validate=True))
-            assert content['v'] == '2'
-            proxy = {
-                'name': content['ps'],
-                'type': 'vmess',
-                'server': content['add'],
-                'port': int(content['port']),
-                'uuid': content['id'],
-                'alterId': int(content['aid']),
-                'cipher': content['scy'],
-                'udp': has_udp,
-                'tls': content['tls'] == 'tls',
-                'skip-cert-verify': skip_cert_verify,
-                'network': 'ws'
-            }
-            if content['net'] == 'ws':
-                proxy['ws-opts'] = {
-                    'path': content['path'],
-                    'headers': {
-                        'Host': content['host']
-                    }
+        content = json.loads(b64decode(s[8:].encode(), validate=True))
+        assert content['v'] == '2'
+        proxy = {
+            'name': content['ps'],
+            'type': 'vmess',
+            'server': content['add'],
+            'port': int(content['port']),
+            'uuid': content['id'],
+            'alterId': int(content['aid']),
+            'cipher': content['scy'] if 'scy' in content else 'auto',
+            'udp': has_udp,
+            'tls': content['tls'] == 'tls',
+            'skip-cert-verify': skip_cert_verify
+        }
+        if content['net'] == 'tcp':
+            pass
+        elif content['net'] == 'ws':
+            proxy['network'] = 'ws'
+            proxy['ws-opts'] = {
+                'path': content['path'],
+                'headers': {
+                    'Host': content['host']
                 }
-            else:
-                return {}
-            return proxy
-        except:
+            }
+        else:
+            print(f'Unknown `net` for vmess proxy: {content["net"]}',
+                  file=stderr)
             return {}
+        return proxy
+    print(f'Unknown scheme {r.scheme}', file=stderr)
     return {}
 
 
@@ -135,8 +138,8 @@ cfg = {
 }
 cfg['rules'] = addresses_to_rules(CN_DNS_SERVER_ADDRESSES, '国内域名解析', True) + \
                addresses_to_rules(NON_CN_DNS_SERVER_ADDRESSES, '国外域名解析', True) + \
-               ['DOMAIN-SUFFIX,%s,国外' % domain for domain in NON_CN_DOMAINS] + \
                ['DOMAIN-SUFFIX,%s,国内' % domain for domain in CN_DOMAINS] + \
+               ['DOMAIN-SUFFIX,%s,国外' % domain for domain in NON_CN_DOMAINS] + \
                addresses_to_rules(_IPv4Constants._private_networks + _IPv6Constants._private_networks, '私网') + \
                addresses_to_rules(TELEGRAM_ADDRESSES, 'Telegram') + \
                ['GEOIP,CN,国内', 'MATCH,国外']
@@ -149,6 +152,8 @@ for sub in SUBSCRIPTIONS:
     group = {'name': sub['name'], 'type': 'select', 'proxies': []}
 
     def add_proxy(proxy: dict):
+        if not proxy:
+            return
         proxy['name'] = sub['proxy_name_prefix'] + proxy['name']
         if proxy['name'] in all_proxy_names:
             print(f'Duplicate name detected: {proxy["name"]}', file=stderr)
@@ -157,9 +162,10 @@ for sub in SUBSCRIPTIONS:
         cfg['proxies'].append(proxy)
         group['proxies'].append(proxy['name'])
 
-    sub_content = get(sub['url']).content
+    print('Fetching', sub['url'])
+    sub_content = requests.get(sub['url']).content
     try:
-        yaml_content = safe_load(sub_content)
+        yaml_content = yaml.safe_load(sub_content)
     except:
         yaml_content = None
     if type(yaml_content) is dict and yaml_content['proxies']:
@@ -198,4 +204,4 @@ cfg['proxy-groups'] += [{
 }]
 
 with open(CLASH_CONFIG_FILE, 'w') as config_file:
-    safe_dump(cfg, config_file, allow_unicode=True)
+    yaml.safe_dump(cfg, config_file, allow_unicode=True)

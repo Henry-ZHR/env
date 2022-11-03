@@ -3,11 +3,7 @@ if [ ! -n "$ZSH_VERSION" ]; then
   return
 fi
 
-alias update-sub="sudo -u clash /home/clash/update-sub.py && sudo systemctl restart clash@clash"
-
-# alias baidunetdisk="sandbox ~/Documents/Sandbox/BaiduNetdisk --bind ~/Downloads/BaiduNetdisk/ ~/Downloads -- /usr/bin/baidunetdisk"
-# alias malody="sandbox ~/Documents/Sandbox/Malody -- /usr/bin/wine ~/Malody-4.3.7/malody.exe"
-# alias xes="sandbox ~/Documents/Sandbox/XES --tmpfs ~/.wine/drive_c/users/zhr/AppData/Local/owcrclient/wcropenclassroom/dump/ -- wine 'C:\\Program Files (x86)\\xeszx\\3.24.0.1755\\owcrclient.exe'"
+alias update-sub="(cat ~/Repos/env/proxy/update-sub.py | sudo -E -u clash python)"
 
 disable kill
 disable printf
