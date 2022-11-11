@@ -107,6 +107,10 @@ def parse_proxy(s: str, **kwargs) -> dict:
                     'Host': content['host']
                 }
             }
+        elif content['net'] == 'grpc':
+            proxy['network'] = 'grpc'
+            proxy['servername'] = content['host']
+            proxy['grpc-opts'] = {'grpc-service-name': content['path']}
         else:
             print(f'Unknown `net` for vmess proxy: {content["net"]}',
                   file=stderr)
