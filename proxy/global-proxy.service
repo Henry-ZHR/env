@@ -4,8 +4,8 @@ After=network.target
 
 [Service]
 Type=oneshot
-ExecStart=/bin/bash /usr/local/bin/global-proxy init
-ExecStop=/bin/bash /usr/local/bin/global-proxy fini
+ExecStart=/usr/local/bin/global-proxy init
+ExecStop=/usr/local/bin/global-proxy fini
 RemainAfterExit=yes
 
 [Install]

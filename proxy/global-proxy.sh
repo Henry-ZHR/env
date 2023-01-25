@@ -55,9 +55,6 @@ if [ "$#" -eq 1 ] && [[ "$1" == "init" ]]; then
             $exe -t mangle -A OUTPUT_DIVERT -p $proto -j MARK --set-mark $CONNMARK
         done
     done
-    for exe in iptables ip6tables; do
-        $exe -t mangle -A OUTPUT -m owner --gid-owner smartdns -j OUTPUT_DIVERT
-    done
 
     for p in 4 6; do
         ip -$p rule add fwmark $CONNMARK table $TABLE_ID
@@ -76,7 +73,6 @@ if [ "$#" -eq 1 ] && [[ "$1" == "fini" ]]; then
 
     for exe in iptables ip6tables; do
         $exe -t mangle -D PREROUTING -j PREROUTING_DIVERT
-        $exe -t mangle -D OUTPUT -m owner --gid-owner smartdns -j OUTPUT_DIVERT
         $exe -t mangle -F PREROUTING_DIVERT
         $exe -t mangle -F OUTPUT_DIVERT
         $exe -t mangle -X PREROUTING_DIVERT

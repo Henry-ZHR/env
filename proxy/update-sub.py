@@ -172,7 +172,7 @@ for sub in SUBSCRIPTIONS:
         yaml_content = yaml.safe_load(sub_content)
     except:
         yaml_content = None
-    if type(yaml_content) is dict and yaml_content['proxies']:
+    if type(yaml_content) is dict and 'proxies' in yaml_content:
         for proxy in yaml_content['proxies']:
             add_proxy(proxy)
     else:
