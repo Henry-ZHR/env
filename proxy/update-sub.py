@@ -26,6 +26,10 @@ TELEGRAM_ADDRESSES = [
 ]  # https://core.telegram.org/resources/cidr.txt
 
 
+def warning(s: str):
+    print(s, file=stderr)
+
+
 def fill(s: bytes) -> bytes:
     return s + b'=' * (3 - (len(s) - 1) % 4)
 
@@ -59,7 +63,8 @@ def parse_proxy(s: str, **kwargs) -> dict:
     if r.scheme == 'ss':
         cipher, password = b64decode(fill(r.username.encode()),
                                      validate=True).decode().split(':')
-        return {
+        q = parse_qs(r.query)
+        proxy = {
             'name': unquote(r.fragment),
             'type': 'ss',
             'server': r.hostname,
@@ -68,6 +73,28 @@ def parse_proxy(s: str, **kwargs) -> dict:
             'password': password,
             'udp': has_udp
         }
+        if 'plugin' in q:
+            t = q['plugin'][0].split(';')
+            assert len(s) > 0
+            if t[0] == 'obfs-local':
+                proxy['plugin'] = 'obfs'
+                proxy['plugin-opts'] = {}
+                for param in t[1:]:
+                    p = param.find('=')
+                    assert p != -1
+                    key, val = param[:p], param[p + 1:]
+                    if key == 'obfs':
+                        proxy['plugin-opts']['mode'] = val
+                    elif key == 'obfs-host':
+                        proxy['plugin-opts']['host'] = val
+                    else:
+                        warning('Unknown `plugin` for ss proxy: ' +
+                                q['plugin'][0])
+                        return {}
+            else:
+                warning('Unknown `plugin` for ss proxy: ' + q['plugin'][0])
+                return {}
+        return proxy
     if r.scheme == 'trojan':
         proxy = {
             'name': unquote(r.fragment),
@@ -112,11 +139,10 @@ def parse_proxy(s: str, **kwargs) -> dict:
             proxy['servername'] = content['host']
             proxy['grpc-opts'] = {'grpc-service-name': content['path']}
         else:
-            print(f'Unknown `net` for vmess proxy: {content["net"]}',
-                  file=stderr)
+            warning(f'Unknown `net` for vmess proxy: {content["net"]}')
             return {}
         return proxy
-    print(f'Unknown scheme {r.scheme}', file=stderr)
+    warning(f'Unknown scheme {r.scheme}')
     return {}
 
 
@@ -160,7 +186,7 @@ for sub in SUBSCRIPTIONS:
             return
         proxy['name'] = sub['proxy_name_prefix'] + proxy['name']
         if proxy['name'] in all_proxy_names:
-            print(f'Duplicate name detected: {proxy["name"]}', file=stderr)
+            warning(f'Duplicate name detected: {proxy["name"]}')
             return
         all_proxy_names.add(proxy['name'])
         cfg['proxies'].append(proxy)
