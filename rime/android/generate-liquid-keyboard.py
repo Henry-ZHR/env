@@ -49,9 +49,9 @@ def get_math_list() -> list:
 
 s = {
     'liquid_keyboard': {
-        'key_height': 40,
-        'key_height_land': 36,
-        'single_width': 32,
+        'key_height': 48,
+        'key_height_land': 40,
+        'single_width': 40,
         'vertical_gap': 4,
         'margin_x': 2,
         'keyboards':
