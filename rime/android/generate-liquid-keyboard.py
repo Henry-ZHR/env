@@ -1,6 +1,7 @@
 from requests import get
 from string import punctuation
 from sys import argv, stderr, stdout
+from unicodedata import category
 from yaml import safe_dump
 
 output_to_stdout = False
@@ -28,10 +29,6 @@ def get_emoji_list() -> list:
     return list(filter(None, s))
 
 
-def get_en_list() -> list:
-    return []
-
-
 def get_zh_list() -> list:
     # https://openstd.samr.gov.cn/bzgk/gb/newGbInfo?hcno=22EA6D162E4110E752259661E1A0D0A8
     # https://people.ubuntu.com/~happyaron/l10n/GB(T)15834-2011.html
@@ -47,15 +44,27 @@ def get_math_list() -> list:
     return [chr(i) for i in range(0x2200, 0x2300)]
 
 
+def get_greek_list() -> list:
+    # https://www.unicode.org/charts/PDF/U0370.pdf
+    return list(
+        filter(lambda c: category(c) != 'Cn',
+               [chr(i) for i in range(0x0388, 0x03cf)]))
+
+
 s = {
     'liquid_keyboard': {
-        'key_height': 40,
-        'key_height_land': 40,
-        'single_width': 32,
-        'vertical_gap': 4,
-        'margin_x': 2,
+        'key_height':
+        40,
+        'key_height_land':
+        40,
+        'single_width':
+        32,
+        'vertical_gap':
+        4,
+        'margin_x':
+        2,
         'keyboards':
-        ['exit', 'clipboard', 'zh', 'en', 'emoji', 'math', 'exit'],
+        ['exit', 'clipboard', 'zh', 'en', 'emoji', 'math', 'greek', 'exit'],
         'exit': {
             'name': '返回',
             'type': 'NO_KEY',
@@ -84,6 +93,11 @@ s = {
             'name': '数学',
             'type': 'SINGLE',
             'keys': get_math_list()
+        },
+        'greek': {
+            'name': '希腊',
+            'type': 'SINGLE',
+            'keys': get_greek_list()
         }
     }
 }
