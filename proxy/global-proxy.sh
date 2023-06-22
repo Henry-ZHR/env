@@ -3,7 +3,7 @@
 set -e
 
 
-readonly TPROXY_PORT=7893
+readonly TPROXY_PORT=1082
 
 readonly CONNMARK=23
 readonly TABLE_ID=233

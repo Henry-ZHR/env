@@ -1,0 +1,154 @@
+{
+    "log": {
+        "level": "debug"
+    },
+    "inbounds": [
+        {
+            "type": "mixed",
+            "tag": "default_ipv4_in",
+            "listen": "127.0.0.1",
+            "listen_port": 1080,
+            "tcp_fast_open": true,
+            "sniff": false,
+            "set_system_proxy": false
+        },
+        {
+            "type": "mixed",
+            "tag": "default_ipv6_in",
+            "listen": "::1",
+            "listen_port": 1080,
+            "tcp_fast_open": true,
+            "sniff": false,
+            "set_system_proxy": false
+        },
+        {
+            "type": "mixed",
+            "tag": "always_proxy_ipv4_in",
+            "listen": "127.0.0.1",
+            "listen_port": 1081,
+            "tcp_fast_open": true,
+            "sniff": false,
+            "set_system_proxy": false
+        },
+        {
+            "type": "mixed",
+            "tag": "always_proxy_ipv6_in",
+            "listen": "::1",
+            "listen_port": 1081,
+            "tcp_fast_open": true,
+            "sniff": false,
+            "set_system_proxy": false
+        },
+        {
+            "type": "tproxy",
+            "tag": "tproxy_ipv4_in",
+            "listen": "127.0.0.1",
+            "listen_port": 1082,
+            "tcp_fast_open": true,
+            "sniff": false
+        },
+        {
+            "type": "tproxy",
+            "tag": "tproxy_ipv6_in",
+            "listen": "::1",
+            "listen_port": 1082,
+            "tcp_fast_open": true,
+            "sniff": false
+        }
+    ],
+    "outbounds": [
+        {
+            "type": "selector",
+            "tag": "proxy"
+        },
+        {
+            "type": "direct",
+            "tag": "direct"
+        },
+        {
+            "type": "block",
+            "tag": "block"
+        },
+        {
+            "type": "selector",
+            "tag": "default",
+            "outbounds": [
+                "proxy",
+                "direct",
+                "block"
+            ],
+            "default": "proxy"
+        },
+        {
+            "type": "selector",
+            "tag": "always_proxy",
+            "outbounds": [
+                "proxy",
+                "direct",
+                "block"
+            ],
+            "default": "proxy"
+        },
+        {
+            "type": "selector",
+            "tag": "local",
+            "outbounds": [
+                "direct",
+                "proxy",
+                "block"
+            ],
+            "default": "direct"
+        },
+        {
+            "type": "selector",
+            "tag": "private",
+            "outbounds": [
+                "direct",
+                "proxy",
+                "block"
+            ],
+            "default": "direct"
+        }
+    ],
+    "route": {
+        "geoip": {
+            "path": "/usr/share/sing-geoip/geoip.db"
+        },
+        "geosite": {
+            "path": "/usr/share/sing-geosite/geosite.db"
+        },
+        "rules": [
+            {
+                "inbound": [
+                    "always_proxy_ipv4_in",
+                    "always_proxy_ipv6_in"
+                ],
+                "outbound": "always_proxy"
+            },
+            {
+                "geosite": [
+                    "cn",
+                    "apple@cn"
+                ],
+                "geoip": [
+                    "cn"
+                ],
+                "outbound": "local"
+            },
+            {
+                "geoip": [
+                    "private"
+                ],
+                "outbound": "private"
+            }
+        ],
+        "final": "default"
+    },
+    "experimental": {
+        "clash_api": {
+            "external_controller": "127.0.0.1:1090",
+            "external_ui": "/usr/share/yacd",
+            "store_selected": true
+        }
+    }
+}

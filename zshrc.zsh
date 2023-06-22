@@ -3,7 +3,7 @@ if [ ! -n "$ZSH_VERSION" ]; then
   return
 fi
 
-alias update-sub="(cat ~/Repos/env/proxy/update-sub.py | sudo -E -u clash python)"
+alias update-sing-box-config="(cat ~/Repos/env/proxy/sing-box/update-config.py | sudo python)"
 
 disable kill
 disable printf
