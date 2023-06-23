@@ -10,8 +10,8 @@ readonly TABLE_ID=233
 
 readonly PROTOCOLS=(tcp udp)
 
-readonly V4_LOCAL_IPS=(0.0.0.0/8 10.0.0.0/8 100.64.0.0/10 127.0.0.0/8 169.254.0.0/16 172.16.0.0/12 192.0.0.0/24 192.168.0.0/16 198.18.0.0/15 255.255.255.255/32)
-readonly V6_LOCAL_IPS=(::/128 ::1/128 64:ff9b:1::/48 100::/64 fc00::/7 fe80::/10)
+readonly V4_LOCAL_IPS=(0.0.0.0 127.0.0.1)
+readonly V6_LOCAL_IPS=(:: ::1)
 
 
 if [ "$#" -eq 2 ] && [[ "$1" == "set" ]]; then
