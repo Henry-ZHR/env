@@ -3,6 +3,7 @@ if [ ! -n "$ZSH_VERSION" ]; then
   return
 fi
 
+alias update-mosdns-config="~/Repos/env/proxy/mosdns/update-config.sh"
 alias update-sing-box-config="(cat ~/Repos/env/proxy/sing-box/update-config.py | sudo python)"
 
 disable kill
