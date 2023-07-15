@@ -34,8 +34,14 @@ plugins:
           - qname &geosite_cn.txt &geosite_google@cn.txt &geosite_apple@cn.txt
         exec: $cn_forward
       - matches:
+          - qname &geosite_cn.txt &geosite_google@cn.txt &geosite_apple@cn.txt
+        exec: return
+      - matches:
           - qname &geosite_geolocation-!cn.txt
         exec: $forward_with_fallback
+      - matches:
+          - qname &geosite_geolocation-!cn.txt
+        exec: return
       - exec: $cn_forward
   - tag: udp4_server
     type: udp_server
