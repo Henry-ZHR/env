@@ -138,7 +138,8 @@
             },
             {
                 "geoip": [
-                    "private"
+                    "private",
+                    "unknown"
                 ],
                 "outbound": "private"
             }
