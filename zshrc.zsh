@@ -12,3 +12,6 @@ disable printf
 export TIMEFMT="Time: %U(user) %S(system) %E(elapsed) %P(CPU)
 Memory: (%Xavgtext+%Davgdata %Mmaxresident)M
 I/O: %Iinputs+%Ooutputs (%Fmajor+%Rminor)pagefaults %Wswaps"
+
+export http_proxy="http://127.0.0.1:1080"
+export https_proxy="http://127.0.0.1:1080"
