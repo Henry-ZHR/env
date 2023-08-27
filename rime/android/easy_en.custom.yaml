@@ -1,4 +1,0 @@
-# Trime only
-patch:
-  engine/filters:
-    - uniquifier

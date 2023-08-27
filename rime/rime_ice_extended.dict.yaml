@@ -1,0 +1,12 @@
+---
+name: rime_ice_extended
+version: 1
+sort: by_weight
+import_tables:
+  - cn_dicts/8105
+  - cn_dicts/41448
+  - cn_dicts/base
+  - cn_dicts/ext
+  - cn_dicts/others
+  - moegirl
+  - zhwiki

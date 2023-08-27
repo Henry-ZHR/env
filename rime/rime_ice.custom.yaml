@@ -1,0 +1,14 @@
+patch:
+  switches/@0/states:
+    - 中文
+    - 英文
+  switches/@1/states:
+    - ，。
+    - ",."
+  switches/@2/states:
+    - 简体
+    - 繁體
+  switches/@3/states:
+    - OFF
+    - 😄ON
+  translator/dictionary: rime_ice_extended

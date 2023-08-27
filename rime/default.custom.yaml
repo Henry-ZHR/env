@@ -1,19 +1,24 @@
 patch:
-  ascii_composer/switch_key/Shift_L: noop
-  ascii_composer/switch_key/Shift_R: noop
-  ascii_composer/switch_key/Caps_Lock: noop
-  menu/page_size: 9
-  key_binder/bindings:
-    - accept: comma
-      send: Page_Up
-      when: paging
-    - accept: period
-      send: Page_Down
-      when: has_menu
-    - accept: Shift+space
-      toggle: full_shape
-      when: always
-  schema_list:
-    - schema: luna_pinyin_simp
-  switcher/save_options/+:
-    - ascii_mode
+  __include: rime_ice_suggestion:/
+  __patch:
+    ascii_composer/switch_key/Caps_Lock: noop
+    ascii_composer/switch_key/Shift_L: noop
+    ascii_composer/switch_key/Shift_R: noop
+    key_binder/bindings:
+      - accept: comma
+        send: Page_Up
+        when: paging
+      - accept: period
+        send: Page_Down
+        when: has_menu
+      - accept: Shift+space
+        toggle: full_shape
+        when: always
+    menu/page_size: 9
+    punctuator/full_shape/`:
+      - ·
+      - ｀
+    punctuator/half_shape/`:
+      - ·
+      - "`"
+    switcher/fold_options: false
