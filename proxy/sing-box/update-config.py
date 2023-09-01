@@ -10,8 +10,9 @@ serenity = pwn.process([
     'sudo', '-u', 'serenity', 'serenity', 'run', '-c',
     '/etc/serenity/config.json'
 ])
+serenity_output = b''
 try:
-    serenity.recvuntil(b'server started at 127.0.0.1:1070')
+    serenity_output += serenity.recvuntil(b'server started at 127.0.0.1:1070')
     config_content = requests.get('http://127.0.0.1:1070/').content
     with open('/etc/sing-box/config.json', 'w') as config_file:
         config_file.write(config_content.decode())
@@ -22,4 +23,7 @@ except:
     raise
 finally:
     serenity.terminate()
+    serenity_output += serenity.recvall()
+    print('Serenity log:')
+    print(serenity_output.decode())
     subprocess.check_call(['global-proxy', 'unset', 'serenity'])

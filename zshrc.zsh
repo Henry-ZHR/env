@@ -5,6 +5,7 @@ fi
 
 alias update-mosdns-config="~/Repos/env/proxy/mosdns/update-config.sh"
 alias update-sing-box-config="(cat ~/Repos/env/proxy/sing-box/update-config.py | sudo python)"
+alias update-proxy-config="update-sing-box-config && update-mosdns-config"
 
 disable kill
 disable printf
