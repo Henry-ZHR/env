@@ -1,14 +1,28 @@
 patch:
-  switches/@0/states:
-    - 中文
-    - 英文
-  switches/@1/states:
-    - ，。
-    - ",."
-  switches/@2/states:
-    - 简体
-    - 繁體
-  switches/@3/states:
-    - OFF
-    - 😄ON
+  switches:
+    - name: ascii_mode
+      reset: 0
+      states:
+        - 中文
+        - 英文
+    - name: full_shape
+      reset: 0
+      states:
+        - 半角
+        - 全角
+    - name: ascii_punct
+      reset: 0
+      states:
+        - ，。
+        - ", ."
+    - name: traditionalization
+      reset: 0
+      states:
+        - 简体
+        - 繁體
+    - name: emoji
+      reset: 0
+      states:
+        - OFF
+        - 😄ON
   translator/dictionary: rime_ice_extended
