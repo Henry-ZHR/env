@@ -27,3 +27,5 @@ finally:
     print('Serenity log:')
     print(serenity_output.decode())
     subprocess.check_call(['global-proxy', 'unset', 'serenity'])
+    subprocess.check_call(
+        ['sudo', '-u', 'sing-box', 'sing-box', 'check', '-C', '/etc/sing-box'])
