@@ -29,16 +29,6 @@ def get_emoji_list() -> list:
     return list(filter(None, s))
 
 
-def get_zh_list() -> list:
-    # https://openstd.samr.gov.cn/bzgk/gb/newGbInfo?hcno=22EA6D162E4110E752259661E1A0D0A8
-    # https://people.ubuntu.com/~happyaron/l10n/GB(T)15834-2011.html
-    return [
-        '。', '？', '！', '，', '、', '；', '：', '“', '”', '‘', '’', '「', '」', '『',
-        '』', '（', '）', '［', '］', '〔', '〕', '【', '】', '——', '……', '～', '·', '《',
-        '》', '〈', '〉'
-    ]
-
-
 def get_math_list() -> list:
     # https://www.unicode.org/charts/PDF/U2200.pdf
     return [chr(i) for i in range(0x2200, 0x2300)]
@@ -51,34 +41,8 @@ def get_greek_list() -> list:
                [chr(i) for i in range(0x0388, 0x03cf)]))
 
 
-s = {
-    'liquid_keyboard': {
-        'key_height':
-        40,
-        'key_height_land':
-        40,
-        'single_width':
-        32,
-        'vertical_gap':
-        4,
-        'margin_x':
-        2,
-        'keyboards':
-        ['exit', 'clipboard', 'zh', 'en', 'emoji', 'math', 'greek', 'exit'],
-        'exit': {
-            'name': '返回',
-            'type': 'NO_KEY',
-            'keys': 'EXIT'
-        },
-        'clipboard': {
-            'name': '剪贴',
-            'type': 'CLIPBOARD'
-        },
-        'zh': {
-            'name': '中文',
-            'type': 'SINGLE',
-            'keys': get_zh_list()
-        },
+safe_dump(
+    {
         'en': {
             'name': '英文',
             'type': 'SINGLE',
@@ -99,9 +63,6 @@ s = {
             'type': 'SINGLE',
             'keys': get_greek_list()
         }
-    }
-}
-
-safe_dump(s,
-          stdout if output_to_stdout else open(argv[1], 'w'),
-          allow_unicode=True)
+    },
+    stdout if output_to_stdout else open(argv[1], 'w'),
+    allow_unicode=True)

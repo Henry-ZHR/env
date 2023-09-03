@@ -70,13 +70,13 @@ style:
   horizontal_gap: 5
   key_height: 44
   key_long_text_size: 16
-  key_text_size: 24
+  key_text_size: 22
   key_width: 10
   keyboards:
     - default
     - number
     - edit
-  label_text_size: 22
+  label_text_size: 18
   latin_locale: en_US
   layout:
     position: fixed
@@ -95,6 +95,15 @@ style:
     alpha: 0xee
     elevation: 0
     movable: false
+  liquid_keyboard_window:
+    - click: space
+      label: " 空格 "
+    - click: backspace
+      label: " 退格 "
+    - click: enter
+      label: " 换行 "
+    - click: liquid_keyboard_exit
+      label: " 返回 "
   locale: zh_CN
   proximity_correction: true
   reset_ascii_mode: false
@@ -105,13 +114,62 @@ style:
   vertical_correction: -5
   vertical_gap: 8
   window:
-    - start: ""
-      composition: "%s"
-      end: ""
-      letter_spacing: 0
+    - composition: "%s"
 
 liquid_keyboard:
-  __include: liquid-keyboard:/liquid_keyboard
+  __include: mutable-keyboards:/
+  keyboards:
+    - clipboard
+    - zh
+    - en
+    - emoji
+    - math
+    - greek
+  clipboard:
+    name: 剪贴
+    type: CLIPBOARD
+  zh:
+    # https://openstd.samr.gov.cn/bzgk/gb/newGbInfo?hcno=22EA6D162E4110E752259661E1A0D0A8
+    # https://people.ubuntu.com/~happyaron/l10n/GB(T)15834-2011.html
+    name: 中文
+    type: SINGLE
+    keys:
+      - 。
+      - ？
+      - ！
+      - ，
+      - 、
+      - ；
+      - ：
+      - “
+      - ”
+      - ‘
+      - ’
+      - 「
+      - 」
+      - 『
+      - 』
+      - （
+      - ）
+      - ［
+      - ］
+      - 〔
+      - 〕
+      - 【
+      - 】
+      - ——
+      - ……
+      - ～
+      - ·
+      - 《
+      - 》
+      - 〈
+      - 〉
+  key_height: 30
+  key_height_land: 30
+  margin_x: 2
+  single_width: 28
+  vertical_gap: 1
 
 preset_keyboards:
   default:
@@ -244,7 +302,7 @@ preset_keys:
     functional: false
     send: BackSpace
   space:
-    label: Space
+    label: ⎵
     repeatable: true
     functional: false
     send: space
@@ -365,3 +423,8 @@ preset_keys:
     send: function
     command: liquid_keyboard
     option: 英文
+  liquid_keyboard_exit:
+    label: 返回
+    send: function
+    command: liquid_keyboard
+    option: -1
