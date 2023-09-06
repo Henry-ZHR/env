@@ -2,10 +2,9 @@
 
 set -e
 
-DIR=/sdcard/Documents/Rime
+DIR=/sdcard/Documents/Rime/user
 
 (cd android; ./generate.sh)
 
-adb push /usr/share/rime-data/* $DIR
 adb push *.yaml $DIR
 adb push android/*.yaml $DIR
