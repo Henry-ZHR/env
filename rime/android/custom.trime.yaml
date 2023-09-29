@@ -96,14 +96,14 @@ style:
     elevation: 0
     movable: false
   liquid_keyboard_window:
-    - click: space
-      label: " 空格 "
-    - click: backspace
-      label: " 退格 "
-    - click: enter
-      label: " 换行 "
     - click: liquid_keyboard_exit
       label: " 返回 "
+    - click: space
+      label: " 空格 "
+    - click: enter
+      label: " 换行 "
+    - click: backspace
+      label: " 退格 "
   locale: zh_CN
   proximity_correction: true
   reset_ascii_mode: false
