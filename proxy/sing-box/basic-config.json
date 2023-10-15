@@ -9,9 +9,7 @@
             "listen": "127.0.0.1",
             "listen_port": 1080,
             "tcp_fast_open": true,
-            "sniff": false,
-            "domain_strategy": "prefer_ipv4",
-            "set_system_proxy": false
+            "domain_strategy": "prefer_ipv4"
         },
         {
             "type": "mixed",
@@ -19,43 +17,43 @@
             "listen": "::1",
             "listen_port": 1080,
             "tcp_fast_open": true,
-            "sniff": false,
-            "domain_strategy": "prefer_ipv6",
-            "set_system_proxy": false
+            "domain_strategy": "prefer_ipv6"
+        },
+        {
+            "type": "mixed",
+            "tag": "virt_ipv4_in",
+            "listen": "192.168.100.1",
+            "listen_port": 1080,
+            "tcp_fast_open": true,
+            "domain_strategy": "prefer_ipv4"
         },
         {
             "type": "mixed",
             "tag": "always_proxy_ipv4_in",
             "listen": "127.0.0.1",
             "listen_port": 1081,
-            "tcp_fast_open": true,
-            "sniff": false,
-            "set_system_proxy": false
+            "tcp_fast_open": true
         },
         {
             "type": "mixed",
             "tag": "always_proxy_ipv6_in",
             "listen": "::1",
             "listen_port": 1081,
-            "tcp_fast_open": true,
-            "sniff": false,
-            "set_system_proxy": false
+            "tcp_fast_open": true
         },
         {
             "type": "tproxy",
             "tag": "tproxy_ipv4_in",
             "listen": "127.0.0.1",
             "listen_port": 1082,
-            "tcp_fast_open": true,
-            "sniff": false
+            "tcp_fast_open": true
         },
         {
             "type": "tproxy",
             "tag": "tproxy_ipv6_in",
             "listen": "::1",
             "listen_port": 1082,
-            "tcp_fast_open": true,
-            "sniff": false
+            "tcp_fast_open": true
         }
     ],
     "outbounds": [
