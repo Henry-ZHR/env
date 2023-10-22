@@ -2,6 +2,14 @@
     "log": {
         "level": "debug"
     },
+    "dns": {
+        "servers": [
+            {
+                "address": "local"
+            }
+        ],
+        "disable_cache": true
+    },
     "inbounds": [
         {
             "type": "mixed",
