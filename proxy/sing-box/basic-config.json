@@ -157,8 +157,7 @@
     "experimental": {
         "clash_api": {
             "external_controller": "127.0.0.1:1090",
-            "external_ui": "/usr/share/yacd",
-            "store_selected": true
+            "external_ui": "/usr/share/yacd"
         }
     }
 }
