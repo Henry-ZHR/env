@@ -149,12 +149,16 @@
                     "private",
                     "unknown"
                 ],
+                "ip_is_private": true,
                 "outbound": "private"
             }
         ],
         "final": "default"
     },
     "experimental": {
+        "cache_file": {
+            "enabled": true
+        },
         "clash_api": {
             "external_controller": "127.0.0.1:1090",
             "external_ui": "/usr/share/yacd"
