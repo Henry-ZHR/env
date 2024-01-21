@@ -119,12 +119,32 @@
         }
     ],
     "route": {
-        "geoip": {
-            "path": "/usr/share/sing-geoip/geoip.db"
-        },
-        "geosite": {
-            "path": "/usr/share/sing-geosite/geosite.db"
-        },
+        "rule_set": [
+            {
+                "type": "local",
+                "tag": "geosite_cn",
+                "format": "binary",
+                "path": "/usr/share/sing-geosite/rule-set/geosite-cn.srs"
+            },
+            {
+                "type": "local",
+                "tag": "geosite_google_cn",
+                "format": "binary",
+                "path": "/usr/share/sing-geosite/rule-set/geosite-google@cn.srs"
+            },
+            {
+                "type": "local",
+                "tag": "geosite_apple_cn",
+                "format": "binary",
+                "path": "/usr/share/sing-geosite/rule-set/geosite-apple@cn.srs"
+            },
+            {
+                "type": "local",
+                "tag": "geoip_cn",
+                "format": "binary",
+                "path": "/usr/share/sing-geoip/rule-set/geoip-cn.srs"
+            }
+        ],
         "rules": [
             {
                 "inbound": [
@@ -134,21 +154,20 @@
                 "outbound": "always_proxy"
             },
             {
-                "geosite": [
-                    "cn",
-                    "google@cn",
-                    "apple@cn"
-                ],
-                "geoip": [
-                    "cn"
+                "rule_set": [
+                    "geosite_cn",
+                    "geosite_google_cn",
+                    "geosite_apple_cn"
                 ],
                 "outbound": "local"
             },
             {
-                "geoip": [
-                    "private",
-                    "unknown"
+                "rule_set": [
+                    "geoip_cn"
                 ],
+                "outbound": "local"
+            },
+            {
                 "ip_is_private": true,
                 "outbound": "private"
             }
