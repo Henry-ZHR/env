@@ -168,6 +168,12 @@
                 "outbound": "local"
             },
             {
+                "domain": [
+                    "us.download.nvidia.com"
+                ],
+                "outbound": "local"
+            },
+            {
                 "ip_is_private": true,
                 "outbound": "private"
             }
