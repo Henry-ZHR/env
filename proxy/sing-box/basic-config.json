@@ -124,25 +124,25 @@
                 "type": "local",
                 "tag": "geosite_cn",
                 "format": "binary",
-                "path": "/usr/share/sing-geosite/rule-set/geosite-cn.srs"
+                "path": "/usr/share/sing-box/sing-geosite-rule-set/geosite-cn.srs"
             },
             {
                 "type": "local",
                 "tag": "geosite_google_cn",
                 "format": "binary",
-                "path": "/usr/share/sing-geosite/rule-set/geosite-google@cn.srs"
+                "path": "/usr/share/sing-box/sing-geosite-rule-set/geosite-google@cn.srs"
             },
             {
                 "type": "local",
                 "tag": "geosite_apple_cn",
                 "format": "binary",
-                "path": "/usr/share/sing-geosite/rule-set/geosite-apple@cn.srs"
+                "path": "/usr/share/sing-box/sing-geosite-rule-set/geosite-apple@cn.srs"
             },
             {
                 "type": "local",
                 "tag": "geoip_cn",
                 "format": "binary",
-                "path": "/usr/share/sing-geoip/rule-set/geoip-cn.srs"
+                "path": "/usr/share/sing-box/sing-geoip-rule-set/geoip-cn.srs"
             }
         ],
         "rules": [
