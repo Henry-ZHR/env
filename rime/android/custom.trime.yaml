@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-config_version: 3.0
+config_version: "3.0"
 
 fallback_colors:
   __include: trime:/fallback_colors
@@ -130,16 +130,16 @@ preset_keyboards:
   default:
     width: 10
     keys:
-      - { click: q, long_click: 1, swipe_down: 1 }
-      - { click: w, long_click: 2, swipe_down: 2 }
-      - { click: e, long_click: 3, swipe_down: 3 }
-      - { click: r, long_click: 4, swipe_down: 4 }
-      - { click: t, long_click: 5, swipe_down: 5 }
-      - { click: y, long_click: 6, swipe_down: 6 }
-      - { click: u, long_click: 7, swipe_down: 7 }
-      - { click: i, long_click: 8, swipe_down: 8 }
-      - { click: o, long_click: 9, swipe_down: 9 }
-      - { click: p, long_click: 0, swipe_down: 0 }
+      - { click: q, long_click: "1", swipe_down: "1" }
+      - { click: w, long_click: "2", swipe_down: "2" }
+      - { click: e, long_click: "3", swipe_down: "3" }
+      - { click: r, long_click: "4", swipe_down: "4" }
+      - { click: t, long_click: "5", swipe_down: "5" }
+      - { click: y, long_click: "6", swipe_down: "6" }
+      - { click: u, long_click: "7", swipe_down: "7" }
+      - { click: i, long_click: "8", swipe_down: "8" }
+      - { click: o, long_click: "9", swipe_down: "9" }
+      - { click: p, long_click: "0", swipe_down: "0" }
 
       - { width: 5 }
       - { click: a, long_click: "@", swipe_down: "@" }
