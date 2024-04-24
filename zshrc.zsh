@@ -21,3 +21,5 @@ export http_proxy="http://127.0.0.1:1080"
 export https_proxy="http://127.0.0.1:1080"
 
 export VISUAL=vim
+
+fpath=(/usr/lib/python3.11/site-packages/argcomplete/bash_completion.d "${fpath[@]}")
