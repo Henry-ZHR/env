@@ -16,7 +16,7 @@ def ensure_permission(path: str, user: str, mode: int):
 
 serenity_workdir = tempfile.TemporaryDirectory()
 ensure_permission(serenity_workdir.name, 'serenity', 0o700)
-subprocess.check_call(['global-proxy', 'set', 'serenity'])
+subprocess.check_call(['global-proxy', 'enable', 'serenity'])
 serenity = pwn.process([
     'sudo', '-u', 'serenity', 'serenity', 'run', '-C', '/etc/serenity', '-D',
     serenity_workdir.name
@@ -53,4 +53,4 @@ finally:
     serenity_output += serenity.recvall()
     print('Serenity log:')
     print(serenity_output.decode())
-    subprocess.check_call(['global-proxy', 'unset', 'serenity'])
+    subprocess.check_call(['global-proxy', 'disable', 'serenity'])
