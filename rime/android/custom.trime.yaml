@@ -2,13 +2,6 @@
 
 config_version: "3.0"
 
-fallback_colors:
-  __include: trime:/fallback_colors
-
-preset_color_schemes:
-  google:
-    __include: trime:/preset_color_schemes/google
-
 style:
   auto_caps: false
   background_dim_amount: 0.5
@@ -22,8 +15,39 @@ style:
   comment_on_top: true
   comment_text_size: 12
   horizontal: true
-  horizontal_gap: 4
-  key_height: 46
+  horizontal_gap: 3
+  keyboard_padding: 0
+  keyboard_padding_bottom: 0
+  keyboard_padding_land: 0
+  keyboard_padding_land_bottom: 0
+  layout:
+    position: fixed
+    min_length: 255
+    max_length: 255
+    sticky_lines: 0
+    sticky_lines_land: 0
+    max_entries: 0
+    min_check: 0
+    all_phrases: false
+    border: 0
+    max_width: 360
+    max_height: 300
+    min_width: 0
+    min_height: 50
+    margin_x: 5
+    margin_y: 5
+    margin_bottom: 5
+    line_spacing: 0
+    line_spacing_multiplier: 1
+    real_margin: 3
+    spacing: 1
+    round_corner: 0
+    alpha: 255
+    elevation: 0
+    movable: false
+  window:
+    - composition: "%s"
+  key_height: 48
   key_long_text_size: 16
   key_text_size: 22
   key_width: 10
@@ -33,46 +57,48 @@ style:
     - edit
   label_text_size: 18
   latin_locale: en_US
-  layout:
-    position: fixed
-    max_entries: 0
-    border: 0
-    max_width: 360
-    max_height: 300
-    min_width: 0
-    min_height: 50
-    margin_x: 5
-    margin_y: 5
-    margin_bottom: 5
-    real_margin: 3
-    spacing: 1
-    round_corner: 0
-    alpha: 0xee
-    elevation: 0
-    movable: false
-  liquid_keyboard_window:
-    - click: liquid_keyboard_exit
-      label: " 返回 "
-    - click: space
-      label: " 空格 "
-    - click: enter
-      label: " 换行 "
-    - click: backspace
-      label: " 退格 "
   locale: zh_CN
+  keyboard_height: 210
+  keyboard_height_land: 200
   proximity_correction: true
   reset_ascii_mode: false
   round_corner: 16
   shadow_radius: 2
   symbol_text_size: 10
   text_size: 16
-  vertical_correction: -5
-  vertical_gap: 5
-  window:
-    - composition: "%s"
+  vertical_correction: 0
+  vertical_gap: 4
+  enter_label_mode: 0
+  liquid_keyboard_window:
+    - click: liquid_keyboard_exit
+      label: " 返回 "
+      start: ''
+    - click: space
+      label: " 空格 "
+      start: ''
+    - click: enter
+      label: " 换行 "
+      start: ''
+    - click: backspace
+      label: " 退格 "
+      start: ''
+
+fallback_colors:
+  __include: trime:/fallback_colors
+
+preset_color_schemes:
+  default:
+    __include: trime:/preset_color_schemes/google
 
 liquid_keyboard:
   __include: mutable-keyboards:/
+  row: 6
+  row_land: 5
+  key_height: 24
+  key_height_land: 24
+  single_width: 60
+  vertical_gap: 2
+  margin_x: 2
   keyboards:
     - clipboard
     - zh
@@ -120,119 +146,6 @@ liquid_keyboard:
       - 》
       - 〈
       - 〉
-  key_height: 30
-  key_height_land: 30
-  margin_x: 2
-  single_width: 28
-  vertical_gap: 1
-
-preset_keyboards:
-  default:
-    width: 10
-    keys:
-      - { click: q, long_click: "1", swipe_down: "1" }
-      - { click: w, long_click: "2", swipe_down: "2" }
-      - { click: e, long_click: "3", swipe_down: "3" }
-      - { click: r, long_click: "4", swipe_down: "4" }
-      - { click: t, long_click: "5", swipe_down: "5" }
-      - { click: y, long_click: "6", swipe_down: "6" }
-      - { click: u, long_click: "7", swipe_down: "7" }
-      - { click: i, long_click: "8", swipe_down: "8" }
-      - { click: o, long_click: "9", swipe_down: "9" }
-      - { click: p, long_click: "0", swipe_down: "0" }
-
-      - { width: 5 }
-      - { click: a, long_click: "@", swipe_down: "@" }
-      - { click: s, long_click: "#", swipe_down: "#" }
-      - { click: d, long_click: "$", swipe_down: "$" }
-      - { click: f, long_click: "_", swipe_down: "_" }
-      - { click: g, long_click: "&", swipe_down: "&" }
-      - { click: h, long_click: "-", swipe_down: "-" }
-      - { click: j, long_click: "+", swipe_down: "+" }
-      - { click: k, long_click: "(", swipe_down: "(" }
-      - { click: l, long_click: ")", swipe_down: ")" }
-      - { width: 5 }
-
-      - { click: shift, composing: delimiter, width: 15 }
-      - { click: z, long_click: "*", swipe_down: "*" }
-      - { click: x, long_click: '"', swipe_down: '"' }
-      - { click: c, long_click: "'", swipe_down: "'" }
-      - { click: v, long_click: ":", swipe_down: ":" }
-      - { click: b, long_click: ";", swipe_down: ";" }
-      - { click: n, long_click: "!", swipe_down: "!" }
-      - { click: m, long_click: "?", swipe_down: "?" }
-      - { click: backspace, width: 15 }
-
-      - { click: keyboard_number }
-      - {
-          click: liquid_keyboard_symbol_zh,
-          long_click: liquid_keyboard_symbol_en,
-        }
-      - { click: ",", label: "，", long_click: keyboard_edit }
-      - { click: mode_switch, long_click: menu }
-      - { click: space, width: 32.5 }
-      - { click: ".", label: "。", long_click: liquid_keyboard_clipboard }
-      - { click: enter, width: 17.5 }
-
-  number:
-    width: 16.666666
-    ascii_mode: 1
-    keys:
-      - { click: "+" }
-      - { click: "-" }
-      - { click: 1 }
-      - { click: 2 }
-      - { click: 3 }
-      - { click: "%" }
-
-      - { click: "*" }
-      - { click: "/" }
-      - { click: 4 }
-      - { click: 5 }
-      - { click: 6 }
-      - { click: space }
-
-      - { click: "(" }
-      - { click: ")" }
-      - { click: 7 }
-      - { click: 8 }
-      - { click: 9 }
-      - { click: backspace }
-
-      - { click: keyboard_default }
-      - { click: "," }
-      - { click: "." }
-      - { click: 0 }
-      - { click: "=", long_click: "≠" }
-      - { click: enter }
-
-  edit:
-    width: 20
-    ascii_mode: 1
-    keys:
-      - { click: ctrl_left }
-      - { click: up }
-      - { click: ctrl_right }
-      - { click: select_all }
-      - { click: backspace }
-
-      - { click: left }
-      - { click: select }
-      - { click: right }
-      - { click: cut }
-      - { click: space }
-
-      - { click: home }
-      - { click: down }
-      - { click: end }
-      - { click: copy }
-      - { click: tab }
-
-      - { click: keyboard_default }
-      - { click: undo }
-      - { click: redo }
-      - { click: paste }
-      - { click: enter }
 
 android_keys:
   __include: trime:/android_keys
@@ -383,3 +296,111 @@ preset_keys:
     send: function
     command: liquid_keyboard
     option: -1
+
+preset_keyboards:
+  default:
+    width: 10
+    keys:
+      - { click: q, long_click: "1", swipe_down: "1" }
+      - { click: w, long_click: "2", swipe_down: "2" }
+      - { click: e, long_click: "3", swipe_down: "3" }
+      - { click: r, long_click: "4", swipe_down: "4" }
+      - { click: t, long_click: "5", swipe_down: "5" }
+      - { click: y, long_click: "6", swipe_down: "6" }
+      - { click: u, long_click: "7", swipe_down: "7" }
+      - { click: i, long_click: "8", swipe_down: "8" }
+      - { click: o, long_click: "9", swipe_down: "9" }
+      - { click: p, long_click: "0", swipe_down: "0" }
+
+      - { width: 5 }
+      - { click: a, long_click: "@", swipe_down: "@" }
+      - { click: s, long_click: "#", swipe_down: "#" }
+      - { click: d, long_click: "$", swipe_down: "$" }
+      - { click: f, long_click: "_", swipe_down: "_" }
+      - { click: g, long_click: "&", swipe_down: "&" }
+      - { click: h, long_click: "-", swipe_down: "-" }
+      - { click: j, long_click: "+", swipe_down: "+" }
+      - { click: k, long_click: "(", swipe_down: "(" }
+      - { click: l, long_click: ")", swipe_down: ")" }
+      - { width: 5 }
+
+      - { click: shift, composing: delimiter, width: 15 }
+      - { click: z, long_click: "*", swipe_down: "*" }
+      - { click: x, long_click: '"', swipe_down: '"' }
+      - { click: c, long_click: "'", swipe_down: "'" }
+      - { click: v, long_click: ":", swipe_down: ":" }
+      - { click: b, long_click: ";", swipe_down: ";" }
+      - { click: n, long_click: "!", swipe_down: "!" }
+      - { click: m, long_click: "?", swipe_down: "?" }
+      - { click: backspace, width: 15 }
+
+      - { click: keyboard_number }
+      - {
+          click: liquid_keyboard_symbol_zh,
+          long_click: liquid_keyboard_symbol_en,
+        }
+      - { click: ",", label: "，", long_click: keyboard_edit }
+      - { click: mode_switch, long_click: menu }
+      - { click: space, width: 32.5 }
+      - { click: ".", label: "。", long_click: liquid_keyboard_clipboard }
+      - { click: enter, width: 17.5 }
+
+  number:
+    width: 16.666666
+    ascii_mode: 1
+    keys:
+      - { click: "+" }
+      - { click: "-" }
+      - { click: 1 }
+      - { click: 2 }
+      - { click: 3 }
+      - { click: "%" }
+
+      - { click: "*" }
+      - { click: "/" }
+      - { click: 4 }
+      - { click: 5 }
+      - { click: 6 }
+      - { click: space }
+
+      - { click: "(" }
+      - { click: ")" }
+      - { click: 7 }
+      - { click: 8 }
+      - { click: 9 }
+      - { click: backspace }
+
+      - { click: keyboard_default }
+      - { click: "," }
+      - { click: "." }
+      - { click: 0 }
+      - { click: "=", long_click: "≠" }
+      - { click: enter }
+
+  edit:
+    width: 20
+    ascii_mode: 1
+    keys:
+      - { click: ctrl_left }
+      - { click: up }
+      - { click: ctrl_right }
+      - { click: select_all }
+      - { click: backspace }
+
+      - { click: left }
+      - { click: select }
+      - { click: right }
+      - { click: cut }
+      - { click: space }
+
+      - { click: home }
+      - { click: down }
+      - { click: end }
+      - { click: copy }
+      - { click: tab }
+
+      - { click: keyboard_default }
+      - { click: undo }
+      - { click: redo }
+      - { click: paste }
+      - { click: enter }
