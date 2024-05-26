@@ -26,7 +26,7 @@ try:
     serenity_output += serenity.recvuntil(b'serenity started')
     s_result = json.loads(requests.get('http://127.0.0.1:1070/').content)
     outbounds = s_result['outbounds'][3:]
-    assert outbounds[0]['tag'] == 'Default'
+    assert outbounds[0]['tag'].casefold() == 'Default'.casefold()
 
     script_dir = os.path.dirname(os.path.realpath(__file__))
     with open(os.path.join(script_dir, 'basic-config.json'),
