@@ -15,6 +15,10 @@ patch:
         toggle: full_shape
         when: always
     menu/page_size: 9
+    punctuator/full_shape:
+      __include: default:/punctuator/full_shape
+    punctuator/half_shape:
+      __include: default:/punctuator/half_shape
     punctuator/full_shape/`:
       - ·
       - ｀
