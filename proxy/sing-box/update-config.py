@@ -3,7 +3,6 @@ import os
 import pwd
 import subprocess
 
-from subprocess import PIPE, Popen
 from tempfile import TemporaryDirectory
 
 
@@ -16,22 +15,14 @@ def ensure_permission(path: str, user: str, mode: int):
 serenity_workdir = TemporaryDirectory()
 ensure_permission(serenity_workdir.name, 'serenity', 0o700)
 subprocess.check_call(['global-proxy', 'enable', 'serenity'])
-serenity = Popen([
+serenity_output = subprocess.check_output([
     'sudo', '-u', 'serenity', 'serenity', 'export', 'default', '-C',
     '/etc/serenity', '-D', serenity_workdir.name
-],
-                 stdout=PIPE,
-                 stderr=PIPE)
-serenity_output, serenity_err = serenity.communicate()
+])
 subprocess.check_call(['global-proxy', 'disable', 'serenity'])
-print('Serenity log:')
-print(serenity_err.decode())
-if serenity.returncode != 0:
-    print('Serenity return code:', serenity.returncode)
-    exit(1)
+del serenity_workdir
 
-s_result = json.loads(serenity_output)
-outbounds = s_result['outbounds'][3:]
+outbounds = json.loads(serenity_output)['outbounds'][3:]
 assert outbounds[0]['tag'] == 'default'
 
 script_dir = os.path.dirname(os.path.realpath(__file__))
