@@ -1,14 +1,10 @@
 #!/bin/bash
 
-cd "$(dirname ${0})"
+set -o errexit
 
-sudo cp config.yaml /etc/mosdns
+cd "$(dirname "${0}")"
 
-pushd v2dat
-mkdir out
-go run ./ unpack geosite -o out -f cn -f google@cn -f apple@cn -f geolocation-!cn /usr/share/v2ray/geosite.dat
-sudo cp out/* /etc/mosdns
-rm -rf out
-popd
+cp config.yaml /etc/mosdns
+v2dat unpack geosite -o /etc/mosdns -f cn -f google@cn -f apple@cn -f geolocation-!cn /usr/share/v2ray/geosite.dat
 
-sudo chown -R root:root /etc/mosdns
+chown -R root:root /etc/mosdns

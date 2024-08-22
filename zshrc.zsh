@@ -3,7 +3,7 @@ if [ ! -n "$ZSH_VERSION" ]; then
   return
 fi
 
-alias update-mosdns-config="~/Repos/env/proxy/mosdns/update-config.sh"
+alias update-mosdns-config="sudo ~/Repos/env/proxy/mosdns/update-config.sh"
 alias update-sing-box-config="sudo python ~/Repos/env/proxy/sing-box/update-config.py"
 alias update-proxy-config="update-sing-box-config && update-mosdns-config"
 
