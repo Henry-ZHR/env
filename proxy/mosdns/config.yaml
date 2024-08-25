@@ -9,7 +9,7 @@ plugins:
       upstreams:
         - addr: https://223.5.5.5/dns-query
         - addr: https://1.12.12.12/dns-query
-  - tag: non_cn_forward
+  - tag: non_cn_forward_with_proxy
     type: forward
     args:
       concurrent: 2
@@ -18,12 +18,20 @@ plugins:
           socks5: 127.0.0.1:1081
         - addr: https://1.1.1.1/dns-query
           socks5: 127.0.0.1:1081
-  - tag: forward_with_fallback
+  - tag: non_cn_forward_without_proxy
+    type: forward
+    args:
+      concurrent: 3
+      upstreams:
+        - addr: https://1.0.0.1/dns-query
+        - addr: https://9.9.9.9/dns-query # quad9
+        - addr: https://208.67.222.222/dns-query # opendns
+  - tag: non_cn_forward_with_fallback
     type: fallback
     args:
-      primary: non_cn_forward
-      secondary: cn_forward
-      threshold: 3000
+      primary: non_cn_forward_with_proxy
+      secondary: non_cn_forward_without_proxy
+      threshold: 1000
       always_standby: false
   - tag: default_entry
     type: sequence
@@ -38,7 +46,7 @@ plugins:
         exec: return
       - matches:
           - qname &geosite_geolocation-!cn.txt
-        exec: $forward_with_fallback
+        exec: $non_cn_forward_with_fallback
       - matches:
           - qname &geosite_geolocation-!cn.txt
         exec: return
