@@ -14,18 +14,19 @@ plugins:
     args:
       concurrent: 2
       upstreams:
-        - addr: https://8.8.8.8/dns-query
+        - addr: https://8.8.8.8/dns-query # google
           socks5: 127.0.0.1:1081
-        - addr: https://1.1.1.1/dns-query
+        - addr: https://1.1.1.1/dns-query # cloudflare
           socks5: 127.0.0.1:1081
   - tag: non_cn_forward_without_proxy
     type: forward
     args:
-      concurrent: 3
+      concurrent: 4
       upstreams:
-        - addr: https://1.0.0.1/dns-query
+        - addr: https://1.0.0.1/dns-query # cloudflare
         - addr: https://9.9.9.9/dns-query # quad9
         - addr: https://208.67.222.222/dns-query # opendns
+        - addr: https://185.222.222.222/dns-query # dns.sb
   - tag: non_cn_forward_with_fallback
     type: fallback
     args:
