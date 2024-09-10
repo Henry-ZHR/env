@@ -69,19 +69,6 @@ style:
   vertical_correction: 0
   vertical_gap: 4
   enter_label_mode: 0
-  liquid_keyboard_window:
-    - click: liquid_keyboard_exit
-      label: " 返回 "
-      start: ''
-    - click: space
-      label: " 空格 "
-      start: ''
-    - click: enter
-      label: " 换行 "
-      start: ''
-    - click: backspace
-      label: " 退格 "
-      start: ''
 
 fallback_colors:
   __include: trime:/fallback_colors
@@ -92,13 +79,17 @@ preset_color_schemes:
 
 liquid_keyboard:
   __include: mutable-keyboards:/
-  row: 6
-  row_land: 5
-  key_height: 24
-  key_height_land: 24
-  single_width: 60
+  key_height: 36
+  key_height_land: 28
   vertical_gap: 2
   margin_x: 2
+  fixed_key_bar:
+    position: left
+    keys:
+      - liquid_keyboard_space
+      - liquid_keyboard_enter
+      - liquid_keyboard_backspace
+      - liquid_keyboard_exit
   keyboards:
     - clipboard
     - zh
@@ -113,7 +104,7 @@ liquid_keyboard:
     # https://openstd.samr.gov.cn/bzgk/gb/newGbInfo?hcno=22EA6D162E4110E752259661E1A0D0A8
     # https://people.ubuntu.com/~happyaron/l10n/GB(T)15834-2011.html
     name: 中文
-    type: SINGLE
+    type: VAR_LENGTH
     keys:
       - 。
       - ？
@@ -296,6 +287,21 @@ preset_keys:
     send: function
     command: liquid_keyboard
     option: -1
+  liquid_keyboard_space:
+    label: 空格
+    repeatable: true
+    functional: false
+    send: space
+  liquid_keyboard_backspace:
+    label: 退格
+    repeatable: true
+    functional: false
+    send: BackSpace
+  liquid_keyboard_enter:
+    label: 换行
+    repeatable: true
+    functional: false
+    send: Return
 
 preset_keyboards:
   default:

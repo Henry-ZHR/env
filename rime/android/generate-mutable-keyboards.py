@@ -45,22 +45,22 @@ safe_dump(
     {
         'en': {
             'name': '英文',
-            'type': 'SINGLE',
+            'type': 'VAR_LENGTH',
             'keys': list(punctuation)
         },
         'emoji': {
             'name': '绘文字',
-            'type': 'SINGLE',
+            'type': 'VAR_LENGTH',
             'keys': get_emoji_list()
         },
         'math': {
             'name': '数学',
-            'type': 'SINGLE',
+            'type': 'VAR_LENGTH',
             'keys': get_math_list()
         },
         'greek': {
             'name': '希腊',
-            'type': 'SINGLE',
+            'type': 'VAR_LENGTH',
             'keys': get_greek_list()
         }
     },
