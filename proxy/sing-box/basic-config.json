@@ -123,26 +123,14 @@
             {
                 "type": "local",
                 "tag": "geosite_cn",
-                "format": "binary",
-                "path": "/usr/share/sing-box/sing-geosite-rule-set/geosite-cn.srs"
-            },
-            {
-                "type": "local",
-                "tag": "geosite_google_cn",
-                "format": "binary",
-                "path": "/usr/share/sing-box/sing-geosite-rule-set/geosite-google@cn.srs"
-            },
-            {
-                "type": "local",
-                "tag": "geosite_apple_cn",
-                "format": "binary",
-                "path": "/usr/share/sing-box/sing-geosite-rule-set/geosite-apple@cn.srs"
+                "format": "source",
+                "path": "/etc/sing-box/rule-sets/geosite-cn.json"
             },
             {
                 "type": "local",
                 "tag": "geoip_cn",
-                "format": "binary",
-                "path": "/usr/share/sing-box/sing-geoip-rule-set/geoip-cn.srs"
+                "format": "source",
+                "path": "/etc/sing-box/rule-sets/geoip-cn.json"
             }
         ],
         "rules": [
@@ -155,9 +143,7 @@
             },
             {
                 "rule_set": [
-                    "geosite_cn",
-                    "geosite_google_cn",
-                    "geosite_apple_cn"
+                    "geosite_cn"
                 ],
                 "outbound": "local"
             },
