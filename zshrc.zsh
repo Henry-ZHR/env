@@ -10,8 +10,11 @@ alias update-proxy-config="update-sing-box-config && update-mosdns-config"
 # alias push-lineageos-update="~/Repos/env/push-lineageos-update.sh"
 alias push-lineageos-update="~/Repos/lineage-nio/packages/apps/Updater/push-update.sh"
 
-disable kill
-disable printf
+readonly TO_BE_REPLACED_BUILTINS=('echo' 'kill' 'printf' 'pwd' 'test')
+for i in $TO_BE_REPLACED_BUILTINS
+do
+  alias "$i=/usr/bin/$i"
+done
 
 export TIMEFMT="Time: %U(user) %S(system) %E(elapsed) %P(CPU)
 Memory: (%Xavgtext+%Davgdata %Mmaxresident)M
