@@ -34,44 +34,69 @@ plugins:
       secondary: non_cn_forward_without_proxy
       threshold: 1000
       always_standby: false
-  - tag: default_entry
+
+  - tag: cn_forward_sequence
+    type: sequence
+    args:
+      - exec: $cn_forward
+  - tag: non_cn_forward_sequence
+    type: sequence
+    args:
+      - exec: $non_cn_forward_with_fallback
+  - tag: sysu_forward_sequence
+    type: sequence
+    args:
+      - exec: forward 10.8.8.8 10.8.4.4
+
+  - tag: pre_query
     type: sequence
     args:
       - exec: query_summary
       - exec: cache
+  - tag: default_query
+    type: sequence
+    args:
       - matches:
-          - qname &geosite_cn.txt &geosite_google@cn.txt &geosite_apple@cn.txt
-        exec: $cn_forward
+          - "qname &geosite_cn.txt &geosite_google@cn.txt &geosite_apple@cn.txt"
+        exec: goto cn_forward_sequence
       - matches:
-          - qname &geosite_cn.txt &geosite_google@cn.txt &geosite_apple@cn.txt
-        exec: return
-      - matches:
-          - qname &geosite_geolocation-!cn.txt
-        exec: $non_cn_forward_with_fallback
-      - matches:
-          - qname &geosite_geolocation-!cn.txt
-        exec: return
+          - "qname &geosite_geolocation-!cn.txt"
+        exec: goto non_cn_forward_sequence
       - exec: $cn_forward
-  - tag: udp4_server
+  - tag: default_entry
+    type: sequence
+    args:
+      - exec: jump pre_query
+      - exec: jump default_query
+  - tag: sysu_entry
+    type: sequence
+    args:
+      - exec: jump pre_query
+      - matches:
+          - qname sysu.edu.cn
+        exec: goto sysu_forward_sequence
+      - exec: jump default_query
+
+  - tag: default_udp_server
     type: udp_server
     args:
       entry: default_entry
       listen: 127.0.0.1:53
-  - tag: udp6_server
-    type: udp_server
-    args:
-      entry: default_entry
-      listen: "[::1]:53"
-  - tag: tcp4_server
+  - tag: default_tcp_server
     type: tcp_server
     args:
       entry: default_entry
       listen: 127.0.0.1:53
-  - tag: tcp6_server
+  - tag: sysu_udp_server
+    type: udp_server
+    args:
+      entry: sysu_entry
+      listen: 127.0.1.0:53
+  - tag: sysu_tcp_server
     type: tcp_server
     args:
-      entry: default_entry
-      listen: "[::1]:53"
+      entry: sysu_entry
+      listen: 127.0.1.0:53
 
 api:
   http: 127.0.0.1:9080
