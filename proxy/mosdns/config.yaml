@@ -2,6 +2,11 @@ log:
   level: debug
 
 plugins:
+  - tag: default_cache
+    type: cache
+    args:
+      size: 4096
+
   - tag: cn_forward
     type: forward
     args:
@@ -52,7 +57,10 @@ plugins:
     type: sequence
     args:
       - exec: query_summary
-      - exec: cache
+      - exec: $default_cache
+      - matches:
+          - has_resp
+        exec: accept
   - tag: default_query
     type: sequence
     args:
