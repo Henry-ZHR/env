@@ -74,10 +74,10 @@ plugins:
     type: sequence
     args:
       - matches:
-          - "qname &geosite_cn.txt &geosite_google@cn.txt &geosite_apple@cn.txt"
+          - "qname &geosite-cn.txt &gfwlist-whitelist.txt"
         exec: goto cn_forward_sequence
       - matches:
-          - "qname &geosite_geolocation-!cn.txt"
+          - "qname &gfwlist.txt"
         exec: goto non_cn_forward_sequence
       - exec: $cn_forward
   - tag: default_entry

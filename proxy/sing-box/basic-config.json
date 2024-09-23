@@ -128,6 +128,12 @@
             },
             {
                 "type": "local",
+                "tag": "gfwlist_whitelist",
+                "format": "source",
+                "path": "/etc/sing-box/rule-sets/gfwlist-whitelist.json"
+            },
+            {
+                "type": "local",
                 "tag": "geoip_cn",
                 "format": "source",
                 "path": "/etc/sing-box/rule-sets/geoip-cn.json"
@@ -143,7 +149,8 @@
             },
             {
                 "rule_set": [
-                    "geosite_cn"
+                    "geosite_cn",
+                    "gfwlist_whitelist"
                 ],
                 "outbound": "local"
             },
