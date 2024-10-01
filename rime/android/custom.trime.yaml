@@ -74,8 +74,7 @@ fallback_colors:
   __include: trime:/fallback_colors
 
 preset_color_schemes:
-  default:
-    __include: trime:/preset_color_schemes/google
+  __include: trime:/preset_color_schemes
 
 liquid_keyboard:
   __include: mutable-keyboards:/
