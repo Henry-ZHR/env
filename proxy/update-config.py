@@ -62,15 +62,17 @@ def unpack_geo() -> tuple[str, str]:
 # Format: same as geosite_xxx.txt
 def get_gfwlist() -> tuple[str, str]:
 
+    r = requests.get(GFWLIST_URL, proxies=REQUESTS_PROXIES)
+    assert r.status_code == 200
+    blacklist, whitelist, ignore_cnt = [], [], 0
+
     def add_if_valid(l: list[str], domain: str, prefix: str = None):
         if DOMAIN_VALIDATE_RE.fullmatch(domain):
             l += [(f'{prefix}:' if prefix else '') + domain]
         else:
-            print('Ignored invalid domain:', domain, file=sys.stderr)
+            nonlocal ignore_cnt
+            ignore_cnt += 1
 
-    r = requests.get(GFWLIST_URL, proxies=REQUESTS_PROXIES)
-    assert r.status_code == 200
-    blacklist, whitelist, ignore_cnt = [], [], 0
     for line in base64.b64decode(r.content).decode().splitlines():
         if line.startswith('!'):
             continue
