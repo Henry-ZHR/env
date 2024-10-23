@@ -14,6 +14,7 @@ SCRIPT_DIR = Path(__file__).parent
 
 SB_CONFIG_DIR = Path('/etc/sing-box')
 SB_CONFIG_FILE = SB_CONFIG_DIR / 'config.json'
+SB_CONFIG_FILE_BAK = SB_CONFIG_FILE.parent / (SB_CONFIG_FILE.name + '.bak')
 SB_RULE_SETS_DIR = SB_CONFIG_DIR / 'rule-sets'
 
 MOSDNS_CONFIG_DIR = Path('/etc/mosdns')
@@ -22,7 +23,7 @@ REQUESTS_PROXIES = {'https': 'http://127.0.0.1:1080'}
 GEOSITE_TAGS = ['cn', 'apple@cn', 'google@cn', 'microsoft@cn']
 GFWLIST_URL = 'https://raw.githubusercontent.com/gfwlist/gfwlist/refs/heads/master/gfwlist.txt'
 DOMAIN_VALIDATE_RE = re.compile(
-    "^(((?!-))(xn--|_)?[a-z0-9-]{0,61}[a-z0-9]{1,1}\\.)*(xn--)?([a-z0-9][a-z0-9\\-]{0,60}|[a-z0-9-]{1,30}\\.[a-z]{2,})$"
+    '^(((?!-))(xn--|_)?[a-z0-9-]{0,61}[a-z0-9]{1,1}\\.)*(xn--)?([a-z0-9][a-z0-9\\-]{0,60}|[a-z0-9-]{1,30}\\.[a-z]{2,})$'
 )
 
 
@@ -45,7 +46,7 @@ def unpack_geo() -> tuple[str, str]:
         'v2dat', 'unpack', 'geoip', '-o',
         tmp_dir.absolute(), '-f', 'cn', '/usr/share/v2ray/geoip.dat'
     ])
-    with (tmp_dir / "geoip_cn.txt").open('r') as f:
+    with (tmp_dir / 'geoip_cn.txt').open('r') as f:
         geoip_content = f.read()
     geosite_content = ''
     for tag in GEOSITE_TAGS:
@@ -124,7 +125,7 @@ def update_sb_config():
     with (SB_CONFIG_DIR / 'clash-api-secret.txt').open('r') as f:
         config_content['experimental']['clash_api']['secret'] = f.read()
 
-    SB_CONFIG_FILE.replace(SB_CONFIG_DIR / 'config.json.bak')
+    SB_CONFIG_FILE.replace(SB_CONFIG_FILE_BAK)
     with SB_CONFIG_FILE.open('w') as f:
         json.dump(config_content, f, ensure_ascii=False, indent=4)
     ensure_permission(SB_CONFIG_FILE.absolute(), 'sing-box', 0o600)
@@ -190,6 +191,11 @@ if __name__ == '__main__':
     subprocess.check_call([
         'sudo', '-u', 'sing-box', 'sing-box', 'check', '-C',
         SB_CONFIG_DIR.absolute()
+    ])
+    subprocess.call([
+        'diff', '-s', '--color',
+        SB_CONFIG_FILE_BAK.absolute(),
+        SB_CONFIG_FILE.absolute()
     ])
 
     # mosdns
