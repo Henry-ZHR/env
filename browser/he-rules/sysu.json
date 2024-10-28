@@ -1,0 +1,18 @@
+{
+    "request": [],
+    "sendHeader": [],
+    "receiveHeader": [
+        {
+            "enable": true,
+            "name": "CAS - Persistent cookies",
+            "ruleType": "modifyReceiveHeader",
+            "matchType": "domain",
+            "pattern": "cas.sysu.edu.cn",
+            "exclude": "",
+            "group": "SYSU",
+            "isFunction": true,
+            "code": "for (const name in val) {\n  if (val[name].name.toLowerCase() == 'set-cookie') {\n    if (!val[name].value.includes('Expires=') && !val[name].value.includes('Max-Age='))\n      val[name].value += '; Max-Age=34560000';\n  }\n}"
+        }
+    ],
+    "receiveBody": []
+}
