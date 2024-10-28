@@ -1,0 +1,31 @@
+{
+    "request": [
+        {
+            "enable": true,
+            "name": "luogu.com.cn -> luogu.com",
+            "ruleType": "redirect",
+            "matchType": "regexp",
+            "pattern": "^https:\\/\\/www\\.luogu\\.com\\.cn\\/((discuss|paste|user)((\\/|\\?|#).*)?)$",
+            "exclude": "",
+            "group": "Luogu",
+            "isFunction": false,
+            "action": "redirect",
+            "to": "https://www.luogu.com/$1"
+        },
+        {
+            "enable": true,
+            "name": "luogu.com -> luogu.com.cn",
+            "ruleType": "redirect",
+            "matchType": "regexp",
+            "pattern": "^https:\\/\\/www\\.luogu\\.com\\/((chat|contest|ide|image|problem|ranking|record|theme|training)((\\/|\\?|#).*)?)$",
+            "exclude": "",
+            "group": "Luogu",
+            "isFunction": false,
+            "action": "redirect",
+            "to": "https://www.luogu.com.cn/$1"
+        }
+    ],
+    "sendHeader": [],
+    "receiveHeader": [],
+    "receiveBody": []
+}
