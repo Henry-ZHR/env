@@ -114,8 +114,13 @@ def update_sb_config():
         return output
 
     serenity_output = run_serenity()
-    outbounds = json.loads(serenity_output)['outbounds'][3:]
-    assert outbounds[0]['tag'] == 'default'
+    outbounds = json.loads(serenity_output)['outbounds']
+    for i in range(len(outbounds)):
+        if outbounds[i]['tag'] == 'default':
+            outbounds = outbounds[i:]
+            break
+    else:
+        assert False, "Couldn't find outbound with tag `default`"
 
     with (SCRIPT_DIR / 'sing-box' / 'basic-config.json').open('r') as f:
         config_content = json.loads(f.read())
