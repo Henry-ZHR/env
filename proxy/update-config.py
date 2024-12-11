@@ -1,14 +1,15 @@
 import base64
 import json
+import locale
 import os
 import pwd
 import re
-import requests
 import subprocess
 import sys
-
 from pathlib import Path
 from tempfile import TemporaryDirectory
+
+import requests
 
 SCRIPT_DIR = Path(__file__).parent
 
@@ -35,6 +36,18 @@ def ensure_permission(path: str, user: str, mode: int):
 
 def check_root():
     assert os.getuid() == 0
+
+
+def continue_or_exit():
+    # Assume compatible
+    yes = re.compile(locale.nl_langinfo(locale.YESEXPR))
+    no = re.compile(locale.nl_langinfo(locale.NOEXPR))
+    while True:
+        s = input('Continue? [y/n]: ')
+        if yes.match(s):
+            return
+        if no.match(s):
+            exit(1)
 
 
 # Returns: (geoip_content, geosite_content)
@@ -111,6 +124,7 @@ def update_sb_config():
             '/etc/serenity', '-D', serenity_workdir.name
         ])
         subprocess.check_call(['global-proxy', 'disable', 'serenity'])
+        continue_or_exit()
         return output
 
     serenity_output = run_serenity()
