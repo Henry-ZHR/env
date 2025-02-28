@@ -17,6 +17,7 @@ SB_CONFIG_DIR = Path('/etc/sing-box')
 SB_CONFIG_FILE = SB_CONFIG_DIR / 'config.json'
 SB_CONFIG_FILE_BAK = SB_CONFIG_FILE.parent / (SB_CONFIG_FILE.name + '.bak')
 SB_RULE_SETS_DIR = SB_CONFIG_DIR / 'rule-sets'
+SERENITY_WORKDIR = Path('/var/lib/serenity')
 
 MOSDNS_CONFIG_DIR = Path('/etc/mosdns')
 
@@ -116,14 +117,14 @@ def get_gfwlist() -> tuple[str, str]:
 def update_sb_config():
 
     def run_serenity() -> str:
-        serenity_workdir = TemporaryDirectory()
-        ensure_permission(serenity_workdir.name, 'serenity', 0o700)
-        subprocess.check_call(['global-proxy', 'enable', 'serenity'])
+        ensure_permission(SERENITY_WORKDIR.absolute(), 'serenity', 0o700)
+        # subprocess.check_call(['global-proxy', 'enable', 'serenity'])
         output = subprocess.check_output([
             'sudo', '-u', 'serenity', 'serenity', 'export', 'default', '-C',
-            '/etc/serenity', '-D', serenity_workdir.name
+            '/etc/serenity', '-D',
+            SERENITY_WORKDIR.absolute()
         ])
-        subprocess.check_call(['global-proxy', 'disable', 'serenity'])
+        # subprocess.check_call(['global-proxy', 'disable', 'serenity'])
         continue_or_exit()
         return output
 
