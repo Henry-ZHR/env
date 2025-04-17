@@ -1,0 +1,19 @@
+{
+    "request": [
+        {
+            "enable": true,
+            "name": "[Mobile ONLY] 应用宝 满速下载",
+            "ruleType": "redirect",
+            "matchType": "regexp",
+            "pattern": "https://sj\\.qq\\.com/appdetail/(.*)",
+            "exclude": "",
+            "group": "Tencent",
+            "isFunction": false,
+            "action": "redirect",
+            "to": "https://a.app.qq.com/o/simple.jsp?pkgname=$1"
+        }
+    ],
+    "sendHeader": [],
+    "receiveHeader": [],
+    "receiveBody": []
+}
