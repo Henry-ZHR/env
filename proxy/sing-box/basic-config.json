@@ -30,7 +30,7 @@
         {
             "type": "mixed",
             "tag": "virt_ipv4_in",
-            "listen": "192.168.100.1",
+            "listen": "192.168.122.1",
             "listen_port": 1080,
             "tcp_fast_open": true,
             "domain_strategy": "prefer_ipv4"
