@@ -5,7 +5,7 @@
     "dns": {
         "servers": [
             {
-                "address": "local"
+                "type": "local"
             }
         ],
         "disable_cache": true
