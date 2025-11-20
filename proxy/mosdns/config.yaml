@@ -53,14 +53,17 @@ plugins:
     type: sequence
     args:
       - exec: $cn_forward
+      - exec: debug_print
   - tag: non_cn_forward_sequence
     type: sequence
     args:
       - exec: $non_cn_forward_with_fallback
+      - exec: debug_print
   - tag: sysu_forward_sequence
     type: sequence
     args:
       - exec: forward 10.8.8.8 10.8.4.4
+      - exec: debug_print
 
   - tag: pre_query
     type: sequence
