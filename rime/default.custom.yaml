@@ -1,9 +1,12 @@
 patch:
   __include: rime_ice_suggestion:/
   __patch:
-    ascii_composer/switch_key/Caps_Lock: noop
-    ascii_composer/switch_key/Shift_L: noop
-    ascii_composer/switch_key/Shift_R: noop
+    ascii_composer/switch_key:
+      Caps_Lock: noop
+      Shift_L: noop
+      Shift_R: noop
+      Control_L: noop
+      Control_R: noop
     key_binder/bindings:
       - accept: comma
         send: Page_Up
@@ -15,6 +18,7 @@ patch:
         toggle: full_shape
         when: always
     menu/page_size: 9
+    punctuator/digit_separators: ""
     punctuator/full_shape:
       __include: default:/punctuator/full_shape
     punctuator/half_shape:
