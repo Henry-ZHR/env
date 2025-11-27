@@ -57,6 +57,10 @@ function fish_prompt --description 'Informative + Informative Vcs'
     printf '\n%s ' $suffix
 end
 
+function ip --wraps='ip'
+    command ip --color=auto $argv
+end
+
 function push-lineageos-update --wraps='~/Repos/lineage-nio/packages/apps/Updater/push-update.sh'
     ~/Repos/lineage-nio/packages/apps/Updater/push-update.sh $argv
 end
