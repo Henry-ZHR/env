@@ -82,6 +82,7 @@ liquid_keyboard:
   __include: mutable-keyboards:/
   key_height: 36
   key_height_land: 28
+  single_width: 36
   vertical_gap: 2
   margin_x: 2
   fixed_key_bar:
@@ -105,7 +106,7 @@ liquid_keyboard:
     # https://openstd.samr.gov.cn/bzgk/gb/newGbInfo?hcno=22EA6D162E4110E752259661E1A0D0A8
     # https://people.ubuntu.com/~happyaron/l10n/GB(T)15834-2011.html
     name: 中文
-    type: VAR_LENGTH
+    type: SINGLE
     keys:
       - 。
       - ？
