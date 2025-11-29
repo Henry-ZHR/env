@@ -62,6 +62,13 @@
             "listen": "::1",
             "listen_port": 1082,
             "tcp_fast_open": true
+        },
+        {
+            "type": "mixed",
+            "tag": "sysu_in",
+            "listen": "127.0.0.1",
+            "listen_port": 1083,
+            "tcp_fast_open": true
         }
     ],
     "outbounds": [
@@ -99,6 +106,16 @@
         },
         {
             "type": "selector",
+            "tag": "sysu",
+            "outbounds": [
+                "direct",
+                "zju_connect",
+                "proxy",
+                "block"
+            ]
+        },
+        {
+            "type": "selector",
             "tag": "local",
             "outbounds": [
                 "direct",
@@ -116,6 +133,13 @@
                 "block"
             ],
             "default": "direct"
+        },
+        {
+            "type": "socks",
+            "tag": "zju_connect",
+            "server": "127.0.0.1",
+            "server_port": 1089,
+            "version": "5"
         }
     ],
     "route": {
@@ -146,6 +170,10 @@
                     "always_proxy_ipv6_in"
                 ],
                 "outbound": "always_proxy"
+            },
+            {
+                "inbound": "sysu_in",
+                "outbound": "sysu"
             },
             {
                 "rule_set": [
