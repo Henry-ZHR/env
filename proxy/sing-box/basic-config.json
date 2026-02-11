@@ -16,24 +16,21 @@
             "tag": "default_ipv4_in",
             "listen": "127.0.0.1",
             "listen_port": 1080,
-            "tcp_fast_open": true,
-            "domain_strategy": "prefer_ipv4"
+            "tcp_fast_open": true
         },
         {
             "type": "mixed",
             "tag": "default_ipv6_in",
             "listen": "::1",
             "listen_port": 1080,
-            "tcp_fast_open": true,
-            "domain_strategy": "prefer_ipv6"
+            "tcp_fast_open": true
         },
         {
             "type": "mixed",
             "tag": "virt_ipv4_in",
             "listen": "192.168.122.1",
             "listen_port": 1080,
-            "tcp_fast_open": true,
-            "domain_strategy": "prefer_ipv4"
+            "tcp_fast_open": true
         },
         {
             "type": "mixed",
@@ -174,6 +171,21 @@
             {
                 "inbound": "sysu_in",
                 "outbound": "sysu"
+            },
+            {
+                "inbound": [
+                    "default_ipv4_in",
+                    "virt_ipv4_in"
+                ],
+                "action": "resolve",
+                "strategy": "prefer_ipv4"
+            },
+            {
+                "inbound": [
+                    "default_ipv6_in"
+                ],
+                "action": "resolve",
+                "strategy": "prefer_ipv6"
             },
             {
                 "rule_set": [
