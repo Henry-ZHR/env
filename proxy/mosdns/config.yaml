@@ -13,10 +13,14 @@ plugins:
     args:
       concurrent: 2
       upstreams:
-        - tag: alidns
-          addr: https://223.5.5.5/dns-query
+        # - tag: alidns
+        #   addr: https://223.5.5.5/dns-query
         - tag: dnspod
-          addr: https://120.53.53.53/dns-query
+          addr: https://doh.pub/dns-query
+          dial_addr: "120.53.53.53"
+        - tag: "360"
+          addr: https://doh.360.cn/dns-query
+          bootstrap: "8.8.8.8"
   - tag: non_cn_forward_with_proxy
     type: forward
     args:
@@ -28,24 +32,11 @@ plugins:
         - tag: cloudflare
           addr: https://1.1.1.1/dns-query
           socks5: 127.0.0.1:1081
-  - tag: non_cn_forward_without_proxy
-    type: forward
-    args:
-      concurrent: 4
-      upstreams:
-        - tag: cloudflare
-          addr: https://1.0.0.1/dns-query
-        - tag: quad9
-          addr: https://9.9.9.9/dns-query
-        - tag: opendns
-          addr: https://208.67.222.222/dns-query
-        - tag: dns_sb
-          addr: https://185.222.222.222/dns-query
   - tag: non_cn_forward_with_fallback
     type: fallback
     args:
       primary: non_cn_forward_with_proxy
-      secondary: non_cn_forward_without_proxy
+      secondary: cn_forward
       threshold: 1000
       always_standby: false
 
