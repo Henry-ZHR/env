@@ -7,8 +7,9 @@ author: me
 style:
   auto_caps: false
   background_dim_amount: 0.5
-  candidate_padding: 5
-  candidate_spacing: 0.5
+  candidate_corner_radius: 0
+  candidate_padding: 2
+  candidate_spacing: 2
   candidate_text_size: 18
   candidate_use_cursor: true
   candidate_view_height: 28
@@ -64,7 +65,7 @@ style:
   keyboard_height_land: 200
   proximity_correction: true
   reset_ascii_mode: false
-  round_corner: 16
+  round_corner: 12
   shadow_radius: 2
   symbol_text_size: 10
   text_size: 16
@@ -332,9 +333,9 @@ preset_keyboards:
       - { click: l, long_click: ")", swipe_down: ")" }
       - { width: 5 }
 
-      - { click: shift, composing: delimiter, width: 15 }
+      - { click: shift, long_click: shift, composing: delimiter, width: 15 }
       - { click: z, long_click: "*", swipe_down: "*" }
-      - { click: x, long_click: '"', swipe_down: '"' }
+      - { click: x, long_click: "\"", swipe_down: "\"" }
       - { click: c, long_click: "'", swipe_down: "'" }
       - { click: v, long_click: ":", swipe_down: ":" }
       - { click: b, long_click: ";", swipe_down: ";" }
@@ -343,10 +344,7 @@ preset_keyboards:
       - { click: backspace, width: 15 }
 
       - { click: keyboard_number }
-      - {
-          click: liquid_keyboard_symbol_zh,
-          long_click: liquid_keyboard_symbol_en,
-        }
+      - { click: liquid_keyboard_symbol_zh, long_click: liquid_keyboard_symbol_en }
       - { click: ",", label: "，", long_click: keyboard_edit }
       - { click: mode_switch, long_click: menu }
       - { click: space, width: 32.5 }
