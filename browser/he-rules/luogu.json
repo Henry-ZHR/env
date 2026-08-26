@@ -6,7 +6,7 @@
             "ruleType": "redirect",
             "matchType": "regexp",
             "pattern": "^https?:\\/\\/www\\.luogu\\.com\\.cn\\/((paste|user)((\\/|\\?|#).*)?)$",
-            "exclude": "",
+            "exclude": "^https?:\\/\\/www\\.luogu\\.com\\.cn\\/(user\\/notification((\\/|\\?|#).*)?)$",
             "group": "Luogu",
             "isFunction": false,
             "action": "redirect",
