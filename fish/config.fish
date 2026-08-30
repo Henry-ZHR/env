@@ -7,12 +7,12 @@ if status is-interactive
         command ip --color=auto $argv
     end
 
-    function push-lineageos-update --wraps='~/Repos/lineage-nio/packages/apps/Updater/push-update.sh'
-        ~/Repos/lineage-nio/packages/apps/Updater/push-update.sh $argv
+    function push-lineageos-update --wraps='~/Projects/lineage-nio/packages/apps/Updater/push-update.sh'
+        ~/Projects/lineage-nio/packages/apps/Updater/push-update.sh $argv
     end
 
-    function update-proxy-config --wraps='sudo python ~/Repos/env/proxy/update-config.py'
-        sudo python ~/Repos/env/proxy/update-config.py $argv
+    function update-proxy-config --wraps='sudo python ~/Projects/env/proxy/update-config.py'
+        sudo python ~/Projects/env/proxy/update-config.py $argv
     end
 
     set -x http_proxy http://127.0.0.1:1080

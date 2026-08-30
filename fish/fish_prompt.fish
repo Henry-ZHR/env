@@ -1,4 +1,4 @@
-# ~/.config/fish/fish_prompt.fish
+# ~/.config/fish/functions/fish_prompt.fish
 
 function fish_prompt --description 'Informative + Informative Vcs'
     # Save the return status of the previous command
