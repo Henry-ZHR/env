@@ -2,6 +2,8 @@
 
 if status is-interactive
     bind ctrl-c 'commandline -f cancel-commandline repaint'
+    bind ctrl-left backward-word
+    bind ctrl-right forward-word
 
     function ip --wraps='ip'
         command ip --color=auto $argv
