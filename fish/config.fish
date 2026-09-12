@@ -5,10 +5,6 @@ if status is-interactive
     bind ctrl-left backward-word
     bind ctrl-right forward-word
 
-    function ip --wraps='ip'
-        command ip --color=auto $argv
-    end
-
     function push-lineageos-update --wraps='~/Projects/lineage-nio/packages/apps/Updater/push-update.sh'
         ~/Projects/lineage-nio/packages/apps/Updater/push-update.sh $argv
     end
