@@ -179,7 +179,7 @@ preset_keys:
     text: "'"
 
   mode_switch:
-    send: Mode_switch
+    send: SWITCH_CHARSET
     toggle: ascii_mode
     states:
       - ZH
@@ -335,7 +335,7 @@ preset_keyboards:
 
       - { click: shift, long_click: shift, composing: delimiter, width: 15 }
       - { click: z, long_click: "*", swipe_down: "*" }
-      - { click: x, long_click: "\"", swipe_down: "\"" }
+      - { click: x, long_click: '"', swipe_down: '"' }
       - { click: c, long_click: "'", swipe_down: "'" }
       - { click: v, long_click: ":", swipe_down: ":" }
       - { click: b, long_click: ";", swipe_down: ";" }
@@ -344,7 +344,10 @@ preset_keyboards:
       - { click: backspace, width: 15 }
 
       - { click: keyboard_number }
-      - { click: liquid_keyboard_symbol_zh, long_click: liquid_keyboard_symbol_en }
+      - {
+          click: liquid_keyboard_symbol_zh,
+          long_click: liquid_keyboard_symbol_en,
+        }
       - { click: ",", label: "，", long_click: keyboard_edit }
       - { click: mode_switch, long_click: menu }
       - { click: space, width: 32.5 }
