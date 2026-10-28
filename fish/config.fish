@@ -26,6 +26,8 @@ if status is-interactive
             --bind .opencode-data/config $HOME/.config/opencode \
             --bind .opencode-data/share $HOME/.local/share/opencode \
             --bind .opencode-data/state $HOME/.local/state/opencode \
+            --bind-try .opencode-data/ssh $HOME/.ssh \
+            --tmpfs /etc/ssh/ssh_config.d \
             --bind . $HOME/w \
             --tmpfs $HOME/w/.opencode-data \
             bash -c 'opencode pair && exec bash -i'
