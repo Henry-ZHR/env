@@ -34,7 +34,7 @@ if status is-interactive
     set -x http_proxy http://127.0.0.1:1080
     set -x https_proxy http://127.0.0.1:1080
 
-    . /etc/modules/init/fish
-    . /etc/modules/init/fish_completion
+    . /usr/share/modules/init/fish
+    . /usr/share/modules/init/fish_completion
     ml use "$HOME/.local/share/modulefiles"
 end
