@@ -19,17 +19,23 @@ if status is-interactive
             --unshare-all \
             --die-with-parent \
             --share-net \
-            --ro-bind / / \
+            --tmpfs / \
             --dev /dev --proc /proc \
-            --tmpfs $HOME --tmpfs /run --tmpfs /var --tmpfs /tmp \
+            --ro-bind /usr /usr \
+            --ro-bind /opt /opt \
+            --ro-bind /etc /etc \
+            --ro-bind /bin /bin \
+            --ro-bind /lib /lib \
+            --ro-bind /lib64 /lib64 \
             --bind .opencode-data/cache $HOME/.cache/opencode \
             --bind .opencode-data/config $HOME/.config/opencode \
             --bind .opencode-data/share $HOME/.local/share/opencode \
             --bind .opencode-data/state $HOME/.local/state/opencode \
             --bind-try .opencode-data/ssh $HOME/.ssh \
             --tmpfs /etc/ssh/ssh_config.d \
-            --bind . $HOME/w \
-            --tmpfs $HOME/w/.opencode-data \
+            --bind . /w \
+            --tmpfs /w/.opencode-data \
+            --chdir /w \
             bash -c 'opencode pair && exec bash -i'
     end
 
