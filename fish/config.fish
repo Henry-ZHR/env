@@ -14,7 +14,16 @@ if status is-interactive
     end
 
     function __sandbox_launch
-        set -l hidden_dirs .opencode-data .dsh-data
+        # ccache 目录在 agent sandbox 里不可写，关掉
+        set -l unset_envs \
+            USE_CCACHE \
+            CCACHE_EXEC \
+            CMAKE_C_COMPILER_LAUNCHER \
+            CMAKE_CXX_COMPILER_LAUNCHER \
+            RUSTC_WRAPPER
+        set -l hidden_dirs \
+            .opencode-data \
+            .dsh-data
 
         # argv 按第一个 `--` 切成两段：前半是 bwrap 额外参数，后半是要跑的命令。
         # 第一个 `--` 之后的 `--` 原样保留给命令行。
@@ -48,6 +57,10 @@ if status is-interactive
             --tmpfs /etc/ssh/ssh_config.d
 
         set -a args --bind . /w
+
+        for e in $unset_envs
+            set -a args --unsetenv $e
+        end
 
         # 仅当目录存在于 cwd 时才用 tmpfs 遮挡
         for d in $hidden_dirs
