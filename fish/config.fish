@@ -15,12 +15,15 @@ if status is-interactive
 
     function __sandbox_launch
         # ccache 目录在 agent sandbox 里不可写，关掉
+        # 不通显示，关掉避免影响 harness 判断
         set -l unset_envs \
             USE_CCACHE \
             CCACHE_EXEC \
             CMAKE_C_COMPILER_LAUNCHER \
             CMAKE_CXX_COMPILER_LAUNCHER \
-            RUSTC_WRAPPER
+            RUSTC_WRAPPER \
+            DISPLAY \
+            WAYLAND_DISPLAY
         set -l hidden_dirs \
             .opencode-data \
             .dsh-data
