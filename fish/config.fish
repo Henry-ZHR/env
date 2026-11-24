@@ -91,14 +91,15 @@ if status is-interactive
 
     function dsh-here
         if test (count $argv) -eq 0
-            set argv dsh web --patch /workspace.patch.yml --no-open
+            set argv dsh web --no-open
         end
         mkdir -p .dsh-data/dsh-home
         __sandbox_launch \
             --bind     .dsh-data/dsh-home $HOME/.dsh \
             --bind-try .dsh-data/ssh      $HOME/.ssh \
-            --ro-bind  ~/Projects/env/dsh/workspace.patch.yml /workspace.patch.yml \
+            --ro-bind  ~/Projects/env/dsh/cordis.patch.yml $HOME/.dsh/cordis.patch.yml \
             --symlink  /w /d/deepseek-harness/default-workspace \
+            --symlink  /w $HOME/w \
             -- \
             $argv
     end

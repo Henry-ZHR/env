@@ -1,0 +1,23 @@
+- id: workspace-controller
+  config:
+    documentsDirectory: /d
+- id: ui-conversation
+  config:
+    busyEnter: steer
+- id: ui-chat
+  config:
+    collapseTiming: next-input
+    transcriptView: verbose
+- id: permission
+  config:
+    presets:
+      read-only:
+        sandbox: read-only
+        approval: ask
+      workspace-write:
+        sandbox: workspace-write
+        approval: ask
+      danger-full-access:
+        sandbox: danger-full-access
+        approval: never
+    defaultPreset: danger-full-access
